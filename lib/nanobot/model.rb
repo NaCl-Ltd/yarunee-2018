@@ -9,5 +9,15 @@ class Nanobot
     # mdl: .mdlファイルの中身(String)
     def initialize(mdl)
     end
+
+    # マップサイズを返す
+    def resolution
+      TODO
+    end
+
+    # ある座標にmatterがあるとき真を返す
+    def [](x, y, z)
+      TODO
+    end
   end
 end

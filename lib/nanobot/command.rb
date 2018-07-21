@@ -11,6 +11,9 @@ class Nanobot
     end
 
     class SMove < Command
+      def initialize(lld)
+        @lld = lld
+      end
     end
 
     class LMove < Command

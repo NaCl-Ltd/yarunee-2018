@@ -16,8 +16,10 @@
     - dfltTracesL.zip
     - problemsL.zip
 
-
-
 ## Usage
 
 - ./exe/nanobot help
+
+## Run test
+
+- rspec

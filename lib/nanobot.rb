@@ -2,6 +2,7 @@ require 'thor'
 require 'nanobot/command'
 require 'nanobot/model'
 require 'nanobot/trace'
+require 'nanobot/source'
 
 class Nanobot
   class Cli < Thor
@@ -15,6 +16,12 @@ class Nanobot
       model = Model.load(mdl_path)
       puts "loaded #{mdl_path}"
       puts "resolution: #{model.resolution}"
+    end
+
+    desc "create_mdl", "mdlファイル用バイナリ"
+    def create_mdl(source_path)
+      model = Source.load(source_path)
+      print model.to_mdl
     end
   end
 end

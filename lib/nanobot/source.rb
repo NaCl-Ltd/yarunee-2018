@@ -20,7 +20,7 @@ class Nanobot
           end
         end
       end
-      [@resolution].pack("C*") + [b].pack("B*")
+      [@resolution].pack("C*") + [b].pack("b*")
     end
   end
 end

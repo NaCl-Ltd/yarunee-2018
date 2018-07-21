@@ -10,7 +10,7 @@ class Nanobot
     def initialize(mdl)
       m = mdl.unpack("C*")
       @resolution = m[0]
-      b = mdl.unpack("B*")[0]
+      b = mdl.unpack("b*")[0]
       @voxels = b[8..-1]
       calc_bounding_box
     end

@@ -23,5 +23,6 @@ class Nanobot
       end
       @dx, @dy, @dz = dx, dy, dz
     end
+    attr_reader :dx, :dy, :dz
   end
 end

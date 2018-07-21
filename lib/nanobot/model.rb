@@ -14,7 +14,7 @@ class Nanobot
       @voxels = b[8..-1]
       calc_bounding_box
     end
-    attr_reader :height, :min_x, :min_z, :max_x, :max_z
+    attr_reader :max_y, :min_x, :min_z, :max_x, :max_z
 
     # マップサイズを返す
     def resolution
@@ -43,7 +43,7 @@ class Nanobot
       @max_z = (0...resolution).to_a.reverse.find{|z|
         (0...resolution).any?{|x| (0...resolution).any?{|y| self[x, y, z] }}
       }
-      @height = (0...resolution).to_a.reverse.find{|y|
+      @max_y = (0...resolution).to_a.reverse.find{|y|
         (0...resolution).any?{|x| (0...resolution).any?{|z| self[x, y, z] }}
       }
     end

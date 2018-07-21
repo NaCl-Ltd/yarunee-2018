@@ -19,7 +19,7 @@ class Nanobot
         expect(model.max_x).to eq(2)
         expect(model.min_z).to eq(1)
         expect(model.max_z).to eq(2)
-        expect(model.height).to eq(2)
+        expect(model.max_y).to eq(2)
       end
     end
   end

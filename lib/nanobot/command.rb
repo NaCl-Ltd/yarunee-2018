@@ -5,7 +5,7 @@ class Nanobot
   # ナノボットへの命令を表すクラス
   module Command
     # 全コマンドの共通処理(あれば)
-    class Base < Command
+    class Base
     end
 
     class Halt < Base

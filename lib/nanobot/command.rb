@@ -9,17 +9,27 @@ class Nanobot
     end
 
     class Halt < Base
+      def inspect
+        "Halt"
+      end
     end
 
     class Wait < Base
     end
 
     class Flip < Base
+      def inspect
+        "Flip"
+      end
     end
 
     class SMove < Base
       def initialize(lld)
         @lld = lld
+      end
+
+      def inspect
+        "SMove(#{@lld.dx} #{@lld.dy} #{@lld.dz})"
       end
     end
 
@@ -32,6 +42,10 @@ class Nanobot
     class Fill < Base
       def initialize(nd)
         @nd = nd
+      end
+
+      def inspect
+        "SMove(#{@nd.dx} #{@nd.dy} #{@nd.dz})"
       end
     end
 

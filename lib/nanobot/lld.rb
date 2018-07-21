@@ -2,7 +2,7 @@ require 'nanobot/ld'
 
 class Nanobot
   # Long linear distance
-  class Lld
+  class Lld < Ld
     # Lldとして正しいとき真を返す
     def self.valid?(dx, dy, dz)
       Ld.valid?(dx, dy, dz) && mlen(dx, dy, dz) <= 15

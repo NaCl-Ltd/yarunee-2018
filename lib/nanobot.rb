@@ -1,8 +1,8 @@
 require 'thor'
-require 'nanobot/command'
 require 'nanobot/model'
 require 'nanobot/trace'
 require 'nanobot/source'
+require 'nanobot/solver1'
 
 class Nanobot
   class Cli < Thor
@@ -28,6 +28,13 @@ class Nanobot
     def to_source(mdl_path)
       model = Model.load(mdl_path)
       puts model.to_source
+    end
+
+    desc "solver1", "Solver1を実行する"
+    def solver1(mdl_path)
+      model = Model.load(mdl_path)
+      trace = Solver1.new(model).solve
+      p trace
     end
   end
 end

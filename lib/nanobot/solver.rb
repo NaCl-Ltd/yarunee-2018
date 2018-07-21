@@ -1,3 +1,4 @@
+require 'logger'
 require 'nanobot/model'
 require 'nanobot/command'
 require 'nanobot/trace'
@@ -10,7 +11,10 @@ class Nanobot
     def initialize(model)
       @model = model
       @trace = Trace.new
+      @logger = Logger.new($stdout)
+      @logger.level = Logger::DEBUG
     end
+    attr_writer :logger
 
     # Traceを返す
     def solve
@@ -21,6 +25,7 @@ class Nanobot
 
     # add_commandsのショートカット
     def cmd(*cmds)
+      @logger.debug(cmds)
       @trace.add_commands(*cmds)
     end
   end

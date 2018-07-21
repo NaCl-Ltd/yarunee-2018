@@ -3,9 +3,13 @@ class Nanobot
   class Ld
     # 直線的であるとき真を返す
     def self.valid?(dx, dy, dz)
-      (dx != 0 && dy != 0) ||
-      (dy != 0 && dz != 0) ||
-      (dz != 0 && dx != 0)
+      if (dx != 0 && dy != 0) ||
+         (dy != 0 && dz != 0) ||
+         (dz != 0 && dx != 0)
+        false
+      else
+        true
+      end
     end
 
     # マンハッタン距離を返す

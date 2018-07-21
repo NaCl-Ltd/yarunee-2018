@@ -1,4 +1,5 @@
 require 'nanobot/lld'
+require 'nanobot/nd'
 
 class Nanobot
   # ナノボットへの命令を表すクラス
@@ -29,6 +30,9 @@ class Nanobot
     end
 
     class Fill < Base
+      def initialize(nd)
+        @nd = nd
+      end
     end
 
     class FusionP < Base

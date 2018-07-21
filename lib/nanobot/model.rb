@@ -3,7 +3,7 @@ class Nanobot
   class Model
     # .mdlファイルを読み込む
     def load(mdl_path)
-      new(File.read(mdl_path)
+      new(File.read(mdl_path))
     end
 
     # mdl: .mdlファイルの中身(String)

@@ -1,4 +1,4 @@
 #!/usr/bin/env ruby
 $LOAD_PATH << "#{__dir__}/../lib"
 require 'nanobot'
-Nanobot.start(ARGV)
+Nanobot::Cli.start(ARGV)

@@ -1,34 +1,40 @@
+require 'nanobot/lld'
+
 class Nanobot
   # ナノボットへの命令を表すクラス
-  class Command
-    class Halt < Command
+  module Command
+    # 全コマンドの共通処理(あれば)
+    class Base < Command
     end
 
-    class Wait < Command
+    class Halt < Base
     end
 
-    class Flip < Command
+    class Wait < Base
     end
 
-    class SMove < Command
+    class Flip < Base
+    end
+
+    class SMove < Base
       def initialize(lld)
         @lld = lld
       end
     end
 
-    class LMove < Command
+    class LMove < Base
     end
 
-    class Fission < Command
+    class Fission < Base
     end
 
-    class Fill < Command
+    class Fill < Base
     end
 
-    class FusionP < Command
+    class FusionP < Base
     end
 
-    class FusionS < Command
+    class FusionS < Base
     end
   end
 end

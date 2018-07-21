@@ -5,6 +5,8 @@ require 'nanobot/trace'
 class Nanobot
   # モデルを受け取って命令列を出力するクラス
   class Solver
+    include Command  # いちいちCommand::って書くのが面倒なので
+
     def initialize(model)
       @model = model
       @trace = Trace.new

@@ -23,5 +23,11 @@ class Nanobot
       model = Source.load(source_path)
       print model.to_mdl
     end
+
+    desc "to_source", "mdlファイルをsource形式にする"
+    def to_source(mdl_path)
+      model = Model.load(mdl_path)
+      puts model.to_source
+    end
   end
 end

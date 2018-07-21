@@ -27,6 +27,26 @@ class Nanobot
       !v.nil? && v != "0"
     end
 
+    def to_source
+      s = Array.new(@resolution) { Array.new(@resolution) { Array.new(@resolution) }}
+      @resolution.times do |x|
+        @resolution.times do |y|
+          @resolution.times do |z|
+            s[y][z][x] = @voxels[x * @resolution * @resolution + y * @resolution + z]
+          end
+        end
+      end
+      s.reverse!
+      @resolution.times do |y|
+        s[y] = s[y].reverse
+        @resolution.times do |z|
+          s[y][z] = s[y][z].join
+        end
+        s[y] = s[y].join("\n")
+      end
+      s.join("\n\n")
+    end
+
     private
     
     # bounding boxを計算する

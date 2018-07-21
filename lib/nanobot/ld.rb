@@ -20,4 +20,4 @@ class Nanobot
       @dx, @dy, @dz = dx, dy, dz
     end
   end
-
+end

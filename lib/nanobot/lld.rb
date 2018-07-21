@@ -1,3 +1,5 @@
+require 'nanobot/ld'
+
 class Nanobot
   # Long linear distance
   class Lld

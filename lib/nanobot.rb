@@ -1,4 +1,7 @@
 require 'thor'
+require 'nanobot/command'
+require 'nanobot/model'
+require 'nanobot/trace'
 
 class Nanobot < Thor
 

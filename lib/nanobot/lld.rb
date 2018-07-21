@@ -3,9 +3,9 @@ require 'nanobot/ld'
 class Nanobot
   # Long linear distance
   class Lld
-    # Lldの範囲におさまっているとき真を返す
+    # Lldとして正しいとき真を返す
     def self.valid?(dx, dy, dz)
-      mlen(dx, dy, dz) <= 15
+      Ld.valid?(dx, dy, dz) && mlen(dx, dy, dz) <= 15
     end
 
     def initialize(dx, dy, dz)

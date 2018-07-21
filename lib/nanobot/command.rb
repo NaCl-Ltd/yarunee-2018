@@ -45,7 +45,7 @@ class Nanobot
       end
 
       def inspect
-        "SMove(#{@nd.dx} #{@nd.dy} #{@nd.dz})"
+        "Fill(#{@nd.dx} #{@nd.dy} #{@nd.dz})"
       end
     end
 

@@ -9,6 +9,9 @@ class Nanobot
   class Solver
     include Command  # いちいちCommand::って書くのが面倒なので
 
+    HEIGHT = 4
+    WIDTH = 5
+
     def initialize(model)
       @model = model
       @trace = Trace.new
@@ -25,10 +28,22 @@ class Nanobot
 
     # 盤面を複数に分割する
     def split_areas()
-
-      return 
+      raise "盤面が5x5より小さいので分割できません" if @model.resolution < 5
+      heights, widths = [
+        [HEIGHT, @model.resolution.divmod(HEIGHT)],
+        [WIDTH, @model.resolution.divmod(WIDTH)],
+      ].map do |size, divmod|
+        size.times.map { |i| i == size-1 ? i * divmod[0] + divmod[1] : i * divmod[0] }
+      end
+      heights.flat_map.with_index do |height, hi|
+        widths.map.with_index do |width, wi|
+          [[width, height],
+           [widths[wi+1] ? widths[wi+1]-1 : @model.resolution-1,
+            heights[hi+1] ? heights[hi+1]-1 : @model.resolution-1]]
+        end
+      end
     end
-    
+
     private
 
     # 複数のbotに同時に命令を与える

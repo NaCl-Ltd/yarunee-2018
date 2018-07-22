@@ -58,6 +58,17 @@ class Nanobot
         )
       end
 
+      it "指定がないbotはWaitする" do
+        @solver.instance_variable_set(:@bots, {3 => Bot.new(3), 5 => Bot.new(5)})
+        @solver.send(:parallel, {
+          5 => [C::Flip.new, C::Flip.new],
+        })
+        trace = @solver.instance_variable_get(:@trace)
+        expect(trace.commands).to eq(
+          [C::Wait.new, C::Flip.new, C::Wait.new, C::Flip.new]
+        )
+      end
+
       it "Fissionを含む場合はbotを増やす" do
         @solver.send(:parallel, {
           1 => [C::Fission.new(Nd.new(1, 0, 0), 0, new_bot_id: 2, new_bot_pos: [1, 0, 0])],

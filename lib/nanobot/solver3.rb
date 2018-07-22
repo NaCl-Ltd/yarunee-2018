@@ -1,3 +1,4 @@
+require 'set'
 require 'nanobot/solver'
 
 class Nanobot
@@ -96,46 +97,67 @@ class Nanobot
         bot.move_by(0, 1, 0) +
         bot.move_to(x1, bot.y, z1)
       }
+      finished_bot_ids = @bots.select{|id, bot| layer_empty?(bot, y)}.keys.to_set
       dir = +1 
       @area_z_size.times do |dz|
-        print_line(dir, dz)
+        print_line(dir, dz, finished_bot_ids)
         dir = -dir
       end
+    end
+
+    # あるボットの担当範囲のy層部分が空のとき真を返す
+    def layer_empty?(bot, y)
+      (x1, z1), (x2, z2) = *@areas[@areas.length-bot.id]
+      for x in x1..x2
+        for z in z1..z2
+          return false if @model[x, y, z]
+        end
+      end
+      return true
     end
 
     # 線を引くように動き、必要なmatterを配置する
     # 終わったあとは次の行にずれる
     # dir: +1または-1
     # dz: 何番目の線か(0~)
-    def print_line(dir, dz)
+    # finished_bot_ids: 層が空だったので作業が必要ないbotたち
+    def print_line(dir, dz, finished_bot_ids)
       @logger.debug("print_line: #{dz}本目 #{dir>0 ? 'forward' : 'backward'}")
       @area_x_size.times do |dx|
         cmd_all{|bot|
-          cmds = []
-          # 自分が担当するエリア
-          (x1, z1), (x2, z2) = *@areas[@areas.length-bot.id]
-          x_size = x2-x1+1
+          if finished_bot_ids.include?(bot.id)
+            []
+          else
+            cmds = []
+            # 自分が担当するエリア
+            (x1, z1), (x2, z2) = *@areas[@areas.length-bot.id]
+            x_size = x2-x1+1
 
-          if dx < x_size
-            cmds << Fill.new(Nd.new(0, -1, 0)) if @model[bot.x, bot.y-1, bot.z] # 自分の真下を塗る
-          end
-          if dx < x_size-1
-            cmds += bot.move_by(dir, 0, 0)
-          end
+            if dx < x_size
+              cmds << Fill.new(Nd.new(0, -1, 0)) if @model[bot.x, bot.y-1, bot.z] # 自分の真下を塗る
+            end
+            if dx < x_size-1
+              cmds += bot.move_by(dir, 0, 0)
+            end
 
-          cmds
+            cmds
+          end
         }
       end
 
       @logger.debug("次の行(#{dz+1}本目)に移動します")
       cmd_all{|bot|
-        # 自分が担当するエリア
-        (x1, z1), (x2, z2) = *@areas[@areas.length-bot.id]
-        z_size = z2-z1+1
-        if dz < z_size-1
-          bot.move_by(0, 0, 1)
-        else
+        if finished_bot_ids.include?(bot.id)
           []
+        else
+          # 自分が担当するエリア
+          (x1, z1), (x2, z2) = *@areas[@areas.length-bot.id]
+          z_size = z2-z1+1
+          if dz < z_size-1
+            bot.move_by(0, 0, 1)
+          else
+            []
+          end
         end
       }
     end

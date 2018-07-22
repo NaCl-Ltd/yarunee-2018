@@ -57,7 +57,6 @@ class Nanobot
       model = Model.load(mdl_path)
       solver = Solver3.new(model)
       trace = solver.solve
-      p trace
       trace.save(options[:file]) if options[:file]
     end
 

@@ -83,8 +83,8 @@ class Nanobot
     def do_fusion(id, master_id)
       @logger.debug("bot#{id}を回収します。")
       cmds_list = Array.new(@bots.size){ [] }
-      parallel(id => @bots[id].move_to(0, @model.max_y+1, 0) +
-                     @bots[master_id].move_to(1, 0, 0))   # masterの右に移動
+      parallel(id => @bots[id].move_to(1, @model.max_y+1, 0) +
+                     @bots[id].move_to(1, 0, 0))   # masterの右に移動
       parallel(master_id => [FusionP.new(Nd.new(1, 0, 0))],
                id        => [FusionS.new(Nd.new(-1, 0, 0))])
     end

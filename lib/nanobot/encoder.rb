@@ -10,6 +10,8 @@ class Nanobot
         case c 
         when Command::Halt
           @traces[0] << "11111111"
+        when Command::Wait
+          @traces[0] << "11111110"
         when Command::Flip
           @traces[0] << "11111101"
         when Command::SMove
@@ -37,6 +39,8 @@ class Nanobot
         when Command::FusionS
           value = nd_val(c.nd)
           @traces[0] << "#{value}110"
+        else
+          raise "不明なコマンドです"
         end
       end
     end

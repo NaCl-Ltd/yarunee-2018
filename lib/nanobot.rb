@@ -5,6 +5,7 @@ require 'nanobot/trace'
 require 'nanobot/source'
 require 'nanobot/solver1'
 require 'nanobot/solver2'
+require 'nanobot/solver3'
 
 class Nanobot
   class Cli < Thor
@@ -47,6 +48,16 @@ class Nanobot
       trace = solver2.solve
       p trace
       solver2.nbt_save(options[:file]) if options[:file]
+    end
+
+    desc "solver3", "Solver3を実行する"
+    option :file, :type => :string
+    def solver3(mdl_path)
+      model = Model.load(mdl_path)
+      solver = Solver3.new(model)
+      trace = solver.solve
+      p trace
+      solver.nbt_save(options[:file]) if options[:file]
     end
 
     desc "browse_model", ".mdlファイルをブラウザで開く"

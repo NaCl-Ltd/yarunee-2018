@@ -92,6 +92,9 @@ class Nanobot
     # ある層を出力する
     # y層の出力は、y+1層にいる状態で行う
     def print_layer(y)
+      if y % (@model.max_y/10) == 0
+        @logger.info("y=#{y}の層を出力します(max_y: #{@model.max_y})")
+      end
       @logger.debug("y=#{y}の層を出力します")
       cmd_all{|bot|
         x1, z1 = *@areas[@areas.length-bot.id][0]

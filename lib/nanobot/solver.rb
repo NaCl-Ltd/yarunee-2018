@@ -17,7 +17,7 @@ class Nanobot
       @trace = Trace.new
       @bots = {1 => Bot.new(1)}
       @logger = Logger.new($stdout)
-      @logger.level = Logger::WARN
+      @logger.level = Logger::INFO
     end
     attr_writer :logger
 

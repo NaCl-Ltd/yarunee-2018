@@ -9,6 +9,11 @@ class Nanobot
 
     # Commandを追加する
     def add_commands(*cmds)
+      cmds.each do |c|
+        unless Command::Base === c
+          raise "コマンドではありません：#{c.inspect}"
+        end
+      end
       @commands.concat(cmds)
     end
 

@@ -47,10 +47,11 @@ class Nanobot
     end
 
     class Fission < Base
-      def initialize(nd, m)
-        @nd, @m = nd, m
+      # new_bot_pos: 新しいbotができる絶対座標
+      def initialize(nd, m, new_bot_id:, new_bot_pos:)
+        @nd, @m, @new_bot_id, @new_bot_pos = nd, m, new_bot_id, new_bot_pos
       end
-      attr_reader :nd, :m
+      attr_reader :nd, :m, :new_bot_id, :new_bot_pos
 
       def ==(other)
         other.class == self.class && self.nd == other.nd && self.m == other.m

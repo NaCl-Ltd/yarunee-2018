@@ -10,8 +10,12 @@ class Nanobot
         self.class == other.class
       end
 
-      def inspect
+      def cmd_name
         self.class.name.split(/::/).last
+      end
+
+      def inspect
+        cmd_name
       end
     end
 
@@ -35,7 +39,7 @@ class Nanobot
       end
 
       def inspect
-        "#{self.class}(#{@lld.dx} #{@lld.dy} #{@lld.dz})"
+        "#{cmd_name}(#{@lld.dx} #{@lld.dy} #{@lld.dz})"
       end
     end
 
@@ -53,7 +57,7 @@ class Nanobot
       end
 
       def inspect
-        "#{self.class}(#{@nd.dx} #{@nd.dy} #{@nd.dz} m=#{@m})"
+        "#{cmd_name}(#{@nd.dx} #{@nd.dy} #{@nd.dz} m=#{@m})"
       end
     end
 
@@ -68,7 +72,7 @@ class Nanobot
       end
 
       def inspect
-        "#{self.class}(#{@nd.dx} #{@nd.dy} #{@nd.dz})"
+        "#{cmd_name}(#{@nd.dx} #{@nd.dy} #{@nd.dz})"
       end
     end
 
@@ -83,7 +87,7 @@ class Nanobot
       end
 
       def inspect
-        "#{self.class}(#{@nd.dx} #{@nd.dy} #{@nd.dz})"
+        "#{cmd_name}(#{@nd.dx} #{@nd.dy} #{@nd.dz})"
       end
     end
 
@@ -98,7 +102,7 @@ class Nanobot
       end
 
       def inspect
-        "#{self.class}(#{@nd.dx} #{@nd.dy} #{@nd.dz})"
+        "#{cmd_name}(#{@nd.dx} #{@nd.dy} #{@nd.dz})"
       end
     end
   end

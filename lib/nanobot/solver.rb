@@ -64,6 +64,20 @@ class Nanobot
       }.to_h
       sorted_cmds_list = padded_cmds_list.sort_by{|id, l| id}.map(&:last)
       @trace.add_commands(*sorted_cmds_list.transpose.flatten(1))
+
+      # botが増えた場合の処理
+      cmds_list.each do |id, cmds|
+        cmds.grep(Fission).each do |cmd|
+          @bots[cmd.new_bot_id] = Bot.new(cmd.new_bot_id, *cmd.new_bot_pos)
+        end
+      end
+      # botが減った場合の処理(現状では1組のみ対応)
+      primary_id,   _ = cmds_list.find{|id, cmds| cmds.any?{|c| FusionP === c}}
+      secondary_id, _ = cmds_list.find{|id, cmds| cmds.any?{|c| FusionS === c}}
+      raise "FusionPとFusionSがセットになっていない" if !!primary_id ^ !!secondary_id
+      if primary_id
+        @bots.delete(secondary_id)
+      end
     end
 
     # 複数のbotに同時に命令を与える

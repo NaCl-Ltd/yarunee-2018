@@ -57,6 +57,27 @@ class Nanobot
           [C::Flip.new, C::Halt.new, C::Flip.new, C::Wait.new]
         )
       end
+
+      it "Fissionを含む場合はbotを増やす" do
+        @solver.send(:parallel, {
+          1 => [C::Fission.new(Nd.new(1, 0, 0), 0, new_bot_id: 2, new_bot_pos: [1, 0, 0])],
+        })
+        bots = @solver.instance_variable_get(:@bots)
+        expect(bots.keys).to eq([1, 2])
+        expect(bots[2].x).to eq(1)
+        expect(bots[2].y).to eq(0)
+        expect(bots[2].z).to eq(0)
+      end
+
+      it "Fusionを含む場合はbotを減らす" do
+        @solver.instance_variable_set(:@bots, {3 => Bot.new(3), 5 => Bot.new(5)})
+        @solver.send(:parallel, {
+          3 => [C::FusionS.new(Nd.new(1, 0, 0))],
+          5 => [C::FusionP.new(Nd.new(-1, 0, 0))],
+        })
+        bots = @solver.instance_variable_get(:@bots)
+        expect(bots.keys).to eq([5])  # FusionPの方が残る
+      end
     end
   end
 end

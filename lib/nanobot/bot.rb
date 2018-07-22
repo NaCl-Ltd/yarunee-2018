@@ -20,7 +20,7 @@ class Nanobot
     # y軸->x軸->z軸の順で移動処理を行う
     def move_to(x, y, z)
       cmds = []
-      p "bot#{@id}: (#{@x},#{@y},#{@z})から(#{x},#{y},#{z})に移動します"
+      #p "bot#{@id}: (#{@x},#{@y},#{@z})から(#{x},#{y},#{z})に移動します"
       dx, dy, dz = x-@x, y-@y, z-@z
       cmds += move_linear(1, dy.abs, dy/dy.abs) if dy != 0
       cmds += move_linear(0, dx.abs, dx/dx.abs) if dx != 0

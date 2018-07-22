@@ -82,7 +82,7 @@ class Nanobot
     def cmd_all(&block)
       cmds_list = @bots.map{|id, bot|
         [id, block.call(bot)]
-      }
+      }.to_h
       parallel(cmds_list)
     end
 

@@ -17,7 +17,7 @@ class Nanobot
       @trace = Trace.new
       @bots = {1 => Bot.new(1)}
       @logger = Logger.new($stdout)
-      @logger.level = Logger::DEBUG
+      @logger.level = Logger::WARN
     end
     attr_writer :logger
 
@@ -50,9 +50,7 @@ class Nanobot
     # cmds_list: {id => [cmds...]}
     # 指定がないbotや、時間が余った場合はWaitで待つ
     def parallel(cmds_list)
-      #@logger.debug("複数botに命令を発行します\n" +
-      #              cmds_list.map{|id, l| "bot#{id}: #{l.inspect}"}.join("\n"))
-        cmds_list.each{|id, l| puts "bot#{id}: #{l.inspect}"}
+      #cmds_list.each{|id, l| puts "bot#{id}: #{l.inspect}"}
 
       max_cmds_len = cmds_list.values.map(&:length).max
       padded_cmds_list = @bots.keys.map{|id|

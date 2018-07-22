@@ -48,6 +48,7 @@ class Nanobot
 
     # 複数のbotに同時に命令を与える
     # cmds_list: {id => [cmds...]}
+    # 指定がないbotや、時間が余った場合はWaitで待つ
     def parallel(cmds_list)
       if cmds_list.size != @bots.size
         raise ArgumentError, "ボット数=#{@bots.size} 命令列数=#{cmds_list.size}"
@@ -63,6 +64,15 @@ class Nanobot
       }.to_h
       sorted_cmds_list = padded_cmds_list.sort_by{|id, l| id}.map(&:last)
       @trace.add_commands(*sorted_cmds_list.transpose.flatten(1))
+    end
+
+    # 複数のbotに同時に命令を与える
+    # 命令はblockで与える(botを受け取り、cmdsを返すこと)
+    def cmd_all(&block)
+      cmds_list = @bots.map{|id, bot|
+        [id, block.call(bot)]
+      }
+      parallel(cmds_list)
     end
 
     # add_commandsのショートカット

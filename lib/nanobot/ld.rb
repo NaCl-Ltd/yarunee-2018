@@ -18,9 +18,9 @@ class Nanobot
     end
 
     def initialize(dx, dy, dz)
-      if !Ld.valid?(dx, dy, dz)
-        raise "Ldとして不正です：(#{dx}, #{dy}, #{dz})"
-      end
+#      if !Ld.valid?(dx, dy, dz)
+#        raise "Ldとして不正です：(#{dx}, #{dy}, #{dz})"
+#      end
       @dx, @dy, @dz = dx, dy, dz
     end
     attr_reader :dx, :dy, :dz

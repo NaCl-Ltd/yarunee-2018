@@ -10,9 +10,9 @@ class Nanobot
 
     def initialize(dx, dy, dz)
       super
-      if !Lld.valid?(dx, dy, dz)
-        raise "Lldとして不正です：(#{dx}, #{dy}, #{dz})"
-      end
+#      if !Lld.valid?(dx, dy, dz)
+#        raise "Lldとして不正です：(#{dx}, #{dy}, #{dz})"
+#      end
       @dx, @dy, @dz = dx, dy, dz
     end
   end

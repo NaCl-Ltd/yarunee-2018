@@ -26,10 +26,10 @@ class Nanobot
         solver = Solver.new(model)
         solver.logger = Logger.new(nil)
         solver.instance_variable_set(:@bots, {3 => Bot.new(3), 5 => Bot.new(5)})
-        solver.send(:parallel, [
-          [C::Flip.new, C::Flip.new],
-          [C::Halt.new],
-        ])
+        solver.send(:parallel, {
+          3 => [C::Flip.new, C::Flip.new],
+          5 => [C::Halt.new],
+        })
         trace = solver.instance_variable_get(:@trace)
         expect(trace.commands).to eq(
           [C::Flip.new, C::Halt.new, C::Flip.new, C::Wait.new]

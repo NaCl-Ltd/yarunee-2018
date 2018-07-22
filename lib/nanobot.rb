@@ -44,5 +44,12 @@ class Nanobot
       print "Press enter to finish"
       $stdin.gets
     end
+
+    desc "exec_trace", ".mdlと.nbtファイルのトレースをブラウザで開く"
+    def browse_trace(mdl_path, nbt_path, frame = '10')
+      Browser.new.exec_trace(mdl_path, nbt_path, frame)
+      print "Press enter to finish"
+      $stdin.gets
+    end
   end
 end

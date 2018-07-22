@@ -28,11 +28,11 @@ class Nanobot
 
     # 盤面を複数に分割する
     def split_areas()
-      raise "盤面が5x5より小さいので分割できません" if @model.x_size < WIDTH ||
-                                                       @model.z_size < HEIGHT
+      n_rows = [HEIGHT, @model.z_size].min
+      n_cols = [WIDTH, @model.x_size].min
       heights, widths = [
-        [HEIGHT, @model.z_size.divmod(HEIGHT)],
-        [WIDTH, @model.x_size.divmod(WIDTH)],
+        [n_rows, @model.z_size.divmod(n_rows)],
+        [n_cols, @model.x_size.divmod(n_cols)],
       ].map do |size, divmod|
         size.times.map { |i| i == size-1 ? i * divmod[0] + divmod[1] : i * divmod[0] }
       end

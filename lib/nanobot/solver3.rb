@@ -4,7 +4,7 @@ require 'nanobot/solver'
 class Nanobot
   # 分裂を行うソルバ
   #
-  # 分裂処理の都合で、bot1が最後のエリア(@area[19])を担当する
+  # 分裂処理の都合で、bot1が最後のエリア(@area[-1])を担当する
   class Solver3 < Solver
     def initialize(*args)
       super
@@ -59,7 +59,7 @@ class Nanobot
                                    new_bot_pos: [0, 0, 0])])
 
       @logger.debug("bot#{i-1}を初期位置に配置します")
-      x0, z0 = *@areas[20 - (i-1)][0]
+      x0, z0 = *@areas[@areas.length-(i-1)][0]
       parallel(i-1 => @bots[i-1].move_to(x0, 0, z0))
     end
 
@@ -71,7 +71,7 @@ class Nanobot
       parallel(master_id => @bots[master_id].move_to(0, @model.max_y+1, 0) +
                             @bots[master_id].move_to(0, 0, 0))
 
-      19.downto(1) do |id|
+      (@areas.size-1).downto(1) do |id|
         do_fusion(id, master_id)
       end
     end

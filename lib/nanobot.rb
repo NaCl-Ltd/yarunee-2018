@@ -57,7 +57,7 @@ class Nanobot
       solver = Solver3.new(model)
       trace = solver.solve
       p trace
-      solver.nbt_save(options[:file]) if options[:file]
+      trace.save(options[:file]) if options[:file]
     end
 
     desc "browse_model", ".mdlファイルをブラウザで開く"

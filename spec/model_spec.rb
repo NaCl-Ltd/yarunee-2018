@@ -12,6 +12,20 @@ class Nanobot
       end
     end
 
+    describe ".empty" do
+      it "サイズ1" do
+        model = Model.empty(1)
+        expect(model.resolution).to eq(1)
+        expect(model[0,0,0]).to eq(false)
+      end
+
+      it "サイズ2" do
+        model = Model.empty(2)
+        expect(model.resolution).to eq(2)
+        expect(model[1,1,1]).to eq(false)
+      end
+    end
+
     describe "bounding boxes" do
       it "座標の最小値を返す" do
         model = Model.load(SAMPLE2_PATH)

@@ -4,7 +4,7 @@ class Nanobot
   describe Solver do
     describe "#split_areas" do
       it "盤面が大きいとき" do
-        model = TODO: 100x100のマップがあるとする
+        model = Model.empty(100)
         solver = Solver.new(model)
         areas = solver.split_areas
         expect(areas.length).to eq(20)

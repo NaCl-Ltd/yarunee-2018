@@ -6,6 +6,14 @@ class Nanobot
       new(File.binread(mdl_path))
     end
 
+    # 全マスがVoidなモデルを生成する
+    def self.empty(resolution)
+      raise ArgumentError if resolution <= 0
+      b = "0" * resolution**3
+      mdl = [resolution].pack("C*") + [b].pack("b*")
+      new(mdl)
+    end
+
     # mdl: .mdlファイルの中身(String)
     def initialize(mdl)
       m = mdl.unpack("C*")

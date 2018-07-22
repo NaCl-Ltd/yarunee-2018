@@ -74,5 +74,14 @@ class Nanobot
       print "Press enter to finish"
       $stdin.gets
     end
+
+    desc "list_maps", "問題の一覧を表示"
+    def list_maps
+      Dir["#{__dir__}/../files/problemsL/LA*_tgt.mdl"].each do |path|
+        model = Model.load(path)
+        puts "#{File.basename(path)}: r=#{model.resolution}"
+        $stdout.flush
+      end
+    end
   end
 end

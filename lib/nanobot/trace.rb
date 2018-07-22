@@ -5,6 +5,7 @@ class Nanobot
     def initialize
       @commands = []
     end
+    attr_reader :commands
 
     # Commandを追加する
     def add_commands(*cmds)

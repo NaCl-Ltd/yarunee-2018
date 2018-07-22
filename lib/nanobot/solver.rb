@@ -12,7 +12,7 @@ class Nanobot
     def initialize(model)
       @model = model
       @trace = Trace.new
-      @bots = [Bot.new(1)]  # Botの列(id順)
+      @bots = {1 => Bot.new(1)}
       @logger = Logger.new($stdout)
       @logger.level = Logger::DEBUG
     end
@@ -36,9 +36,12 @@ class Nanobot
       if cmds_list.size != @bots.size
         raise ArgumentError, "ボット数=#{@bots.size} 命令列数=#{cmds_list.size}"
       end
-      bots_cmds = @bots.zip(cmds_list)
+
+      sorted_bots = @bots.sort_by{|k, v| k}.map(&:last)
+      bots_cmds = sorted_bots.zip(cmds_list)
       @logger.debug("複数botに命令を発行します\n" +
                     bots_cmds.map{|b, l| "bot#{b.id}: #{l.inspect}"}.join("\n"))
+
       max_cmds_len = cmds_list.map(&:length).max
       padded_cmds_list = cmds_list.map{|l|
         l + [Wait.new] * (max_cmds_len - l.length)

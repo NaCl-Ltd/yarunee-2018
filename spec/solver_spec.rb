@@ -25,7 +25,7 @@ class Nanobot
         model = Model.empty(100)
         solver = Solver.new(model)
         solver.logger = Logger.new(nil)
-        solver.instance_variable_set(:@bots, [Bot.new(3), Bot.new(5)])
+        solver.instance_variable_set(:@bots, {3 => Bot.new(3), 5 => Bot.new(5)})
         solver.send(:parallel, [
           [C::Flip.new, C::Flip.new],
           [C::Halt.new],

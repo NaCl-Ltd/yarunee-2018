@@ -4,6 +4,7 @@ require 'nanobot/model'
 require 'nanobot/trace'
 require 'nanobot/source'
 require 'nanobot/solver1'
+require 'nanobot/solver2'
 
 class Nanobot
   class Cli < Thor
@@ -38,9 +39,23 @@ class Nanobot
       p trace
     end
 
+    desc "solver2", "Solver2を実行する"
+    def solver2(mdl_path)
+      model = Model.load(mdl_path)
+      trace = Solver2.new(model).solve
+      p trace
+    end
+
     desc "browse_model", ".mdlファイルをブラウザで開く"
     def browse_model(mdl_path)
       Browser.new.open_model(mdl_path)
+      print "Press enter to finish"
+      $stdin.gets
+    end
+
+    desc "exec_trace", ".mdlと.nbtファイルのトレースをブラウザで開く"
+    def browse_trace(mdl_path, nbt_path, frame = '10')
+      Browser.new.exec_trace(mdl_path, nbt_path, frame)
       print "Press enter to finish"
       $stdin.gets
     end

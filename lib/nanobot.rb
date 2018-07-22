@@ -1,3 +1,4 @@
+require 'pp'
 require 'thor'
 require 'nanobot/browser'
 require 'nanobot/model'

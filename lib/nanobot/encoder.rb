@@ -6,7 +6,6 @@ class Nanobot
     end
   
     def parse(command = [])
-      p command
       command.each do |c|
         case c 
         when Command::Halt
@@ -28,8 +27,17 @@ class Nanobot
           @traces[0] << "00#{a}0100" + "000#{i.to_s(2).rjust(5, "0")}"
         when Command::Fill
           value = nd_val(c.nd)
-          @traces[0] << "#{value.to_s(2).rjust(5, '0')}011"
-        end 
+          @traces[0] << "#{value}011"
+        when Command::Fission
+          value = nd_val(c.nd)
+          @traces[0] << "#{value}101" + c.m.to_s(2).rjust(8, "0")
+        when Command::FusionP
+          value = nd_val(c.nd)
+          @traces[0] << "#{value}111"
+        when Command::FusionS
+          value = nd_val(c.nd)
+          @traces[0] << "#{value}110"
+        end
       end
     end
 
@@ -42,8 +50,8 @@ class Nanobot
 
     private
     def nd_val(nd)
-    return (nd.dx + 1) * 9 + (nd.dy + 1) * 3 + (nd.dz + 1)
+      v = (nd.dx + 1) * 9 + (nd.dy + 1) * 3 + (nd.dz + 1)
+      return v.to_s(2).rjust(5, '0')
     end
-
   end
 end

@@ -119,7 +119,7 @@ class Nanobot
           x_size = x2-x1+1
 
           if dx < x_size
-            cmds << Fill.new(Nd.new(0, -1, 0)) if @model[bot.x, bot.y, bot.z] # 自分の真下を塗る
+            cmds << Fill.new(Nd.new(0, -1, 0)) if @model[bot.x, bot.y-1, bot.z] # 自分の真下を塗る
           end
           if dx < x_size-1
             cmds += bot.move_by(dir, 0, 0)

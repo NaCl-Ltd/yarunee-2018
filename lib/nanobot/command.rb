@@ -6,6 +6,9 @@ class Nanobot
   module Command
     # 全コマンドの共通処理(あれば)
     class Base
+      def ==(other)
+        self.class == other.class
+      end
     end
 
     class Halt < Base
@@ -15,6 +18,9 @@ class Nanobot
     end
 
     class Wait < Base
+      def inspect
+        "Wait"
+      end
     end
 
     class Flip < Base
@@ -26,6 +32,10 @@ class Nanobot
     class SMove < Base
       def initialize(lld)
         @lld = lld
+      end
+
+      def ==(other)
+        other.is_a?(SMove) && self.lld == other.lld
       end
 
       def inspect
@@ -46,6 +56,10 @@ class Nanobot
     class Fill < Base
       def initialize(nd)
         @nd = nd
+      end
+
+      def ==(other)
+        other.is_a?(Fill) && self.nd == other.nd
       end
 
       def inspect

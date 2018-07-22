@@ -26,8 +26,7 @@ class Nanobot
           end
           @traces << "00#{a}0100" + "000#{i.to_s(2).rjust(5, "0")}"
         when Fill
-          nd = c.nd
-          value = (nd.dx + 1) * 9 + (nd.dy + 1) * 3 + (nd.dz + 1)
+          value = nd_val(c.nd)
           @traces << "#{value.to_s(2).rjust(5, '0')}0011"
         end 
       end
@@ -38,5 +37,11 @@ class Nanobot
       file = open(file_path, "wb")
       file.print(binary)
     end
+
+    private
+    def nd_val(nd)
+    return (nd.dx + 1) * 9 + (nd.dy + 1) * 3 + (nd.dz + 1)
+    end
+
   end
 end

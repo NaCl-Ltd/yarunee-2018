@@ -55,6 +55,11 @@ class Nanobot
       s.join("\n\n")
     end
 
+    # ひさし(突き出している部分)があるとき真を返す
+    def has_eaves?
+      TODO
+    end
+
     private
     
     # bounding boxを計算する

@@ -4,6 +4,7 @@ class Nanobot
     MDL1_PATH = "#{__dir__}/../files/problemsL/LA001_tgt.mdl"
     SAMPLE1_PATH = "#{__dir__}/../sample/models/1.mdl"
     SAMPLE2_PATH = "#{__dir__}/../sample/models/2.mdl"
+    SAMPLE3_PATH = "#{__dir__}/../sample/models/3.mdl"
 
     describe ".load" do
       it ".mdlファイルを読み込める" do
@@ -23,6 +24,18 @@ class Nanobot
         model = Model.empty(2)
         expect(model.resolution).to eq(2)
         expect(model[1,1,1]).to eq(false)
+      end
+    end
+
+    describe "#has_eaves?" do
+      it "真の場合" do
+        model = Model.load(SAMPLE3_PATH)
+        expect(model.has_eaves?).to eq(true)
+      end
+
+      it "偽の場合" do
+        model = Model.load(SAMPLE2_PATH)
+        expect(model.has_eaves?).to eq(false)
       end
     end
 

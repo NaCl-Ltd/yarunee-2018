@@ -9,24 +9,19 @@ class Nanobot
       def ==(other)
         self.class == other.class
       end
+
+      def inspect
+        self.class.name.split(/::/).last
+      end
     end
 
     class Halt < Base
-      def inspect
-        "Halt"
-      end
     end
 
     class Wait < Base
-      def inspect
-        "Wait"
-      end
     end
 
     class Flip < Base
-      def inspect
-        "Flip"
-      end
     end
 
     class SMove < Base
@@ -40,7 +35,7 @@ class Nanobot
       end
 
       def inspect
-        "SMove(#{@lld.dx} #{@lld.dy} #{@lld.dz})"
+        "#{self.class}(#{@lld.dx} #{@lld.dy} #{@lld.dz})"
       end
     end
 
@@ -58,7 +53,7 @@ class Nanobot
       end
 
       def inspect
-        "Fission(#{@nd.dx} #{@nd.dy} #{@nd.dz} m=#{@m})"
+        "#{self.class}(#{@nd.dx} #{@nd.dy} #{@nd.dz} m=#{@m})"
       end
     end
 
@@ -73,7 +68,7 @@ class Nanobot
       end
 
       def inspect
-        "Fill(#{@nd.dx} #{@nd.dy} #{@nd.dz})"
+        "#{self.class}(#{@nd.dx} #{@nd.dy} #{@nd.dz})"
       end
     end
 
@@ -88,7 +83,7 @@ class Nanobot
       end
 
       def inspect
-        "FusionP(#{@nd.dx} #{@nd.dy} #{@nd.dz})"
+        "#{self.class}(#{@nd.dx} #{@nd.dy} #{@nd.dz})"
       end
     end
 
@@ -103,7 +98,7 @@ class Nanobot
       end
 
       def inspect
-        "FusionS(#{@nd.dx} #{@nd.dy} #{@nd.dz})"
+        "#{self.class}(#{@nd.dx} #{@nd.dy} #{@nd.dz})"
       end
     end
   end

@@ -1,4 +1,5 @@
 require 'thor'
+require 'nanobot/browser'
 require 'nanobot/model'
 require 'nanobot/trace'
 require 'nanobot/source'
@@ -35,6 +36,13 @@ class Nanobot
       model = Model.load(mdl_path)
       trace = Solver1.new(model).solve
       p trace
+    end
+
+    desc "browse_model", ".mdlファイルをブラウザで開く"
+    def browse_model(mdl_path)
+      Browser.new.open_model(mdl_path)
+      print "Press enter to finish"
+      $stdin.gets
     end
   end
 end

@@ -107,8 +107,8 @@ class Nanobot
       x_size.times do |i|
         cmd_all{|bot|
           cmds = []
-          cmds << [Fill.new(Nd.new(0, -1, 0))] if @model[bot.x, bot.y, bot.z] # 自分の真下を塗る
-          cmds << bot.move_by(dir, 0, 0) unless i == x_size-1
+          cmds << Fill.new(Nd.new(0, -1, 0)) if @model[bot.x, bot.y, bot.z] # 自分の真下を塗る
+          cmds += bot.move_by(dir, 0, 0) unless i == x_size-1
           cmds
         }
       end

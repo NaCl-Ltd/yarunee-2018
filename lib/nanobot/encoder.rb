@@ -4,45 +4,44 @@ class Nanobot
     def initialize
       @traces = [String.new]
     end
-  
-    def parse(command = [])
-      command.each do |c|
-        case c 
-        when Command::Halt
-          @traces[0] << "11111111"
-        when Command::Wait
-          @traces[0] << "11111110"
-        when Command::Flip
-          @traces[0] << "11111101"
-        when Command::SMove
-          lld = c.lld
-          if !lld.dx.zero?
-            a = "01"
-            i = lld.dx + 15
-          elsif !lld.dy.zero?
-            a = "10"
-            i = lld.dy + 15
-          elsif !lld.dz.zero?
-            a = "11"
-            i = lld.dz + 15
+
+    def encode(c)
+      s = case c 
+          when Command::Halt
+            "11111111"
+          when Command::Wait
+            "11111110"
+          when Command::Flip
+            "11111101"
+          when Command::SMove
+            lld = c.lld
+            if !lld.dx.zero?
+              a = "01"
+              i = lld.dx + 15
+            elsif !lld.dy.zero?
+              a = "10"
+              i = lld.dy + 15
+            elsif !lld.dz.zero?
+              a = "11"
+              i = lld.dz + 15
+            end
+            "00#{a}0100" + "000#{i.to_s(2).rjust(5, "0")}"
+          when Command::Fill
+            value = nd_val(c.nd)
+            "#{value}011"
+          when Command::Fission
+            value = nd_val(c.nd)
+            "#{value}101" + c.m.to_s(2).rjust(8, "0")
+          when Command::FusionP
+            value = nd_val(c.nd)
+            "#{value}111"
+          when Command::FusionS
+            value = nd_val(c.nd)
+            "#{value}110"
+          else
+            raise "不明なコマンドです"
           end
-          @traces[0] << "00#{a}0100" + "000#{i.to_s(2).rjust(5, "0")}"
-        when Command::Fill
-          value = nd_val(c.nd)
-          @traces[0] << "#{value}011"
-        when Command::Fission
-          value = nd_val(c.nd)
-          @traces[0] << "#{value}101" + c.m.to_s(2).rjust(8, "0")
-        when Command::FusionP
-          value = nd_val(c.nd)
-          @traces[0] << "#{value}111"
-        when Command::FusionS
-          value = nd_val(c.nd)
-          @traces[0] << "#{value}110"
-        else
-          raise "不明なコマンドです"
-        end
-      end
+      return [s].pack("B*") 
     end
 
     def create_binaryfile(file_path)

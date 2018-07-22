@@ -3,9 +3,9 @@ class Nanobot
   # 命令列を表すクラス
   class Trace
     def initialize
-      @commands = []
+      @nbt_data = ""
+      @encoder = Encoder.new
     end
-    attr_reader :commands
 
     # Commandを追加する
     def add_commands(*cmds)
@@ -13,15 +13,13 @@ class Nanobot
         unless Command::Base === c
           raise "コマンドではありません：#{c.inspect}"
         end
+        @nbt_data << @encoder.encode(c)
       end
-      @commands.concat(cmds)
     end
 
     # .nbtファイルに命令列を書き出す
     def save(nbt_path)
-      encoder = Encoder.new
-      encoder.parse(@commands)
-      encoder.create_binaryfile(nbt_path)
+      File.binwrite(nbt_path, @nbt_data)
     end
   end
 end

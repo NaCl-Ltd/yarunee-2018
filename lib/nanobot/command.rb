@@ -33,17 +33,14 @@ class Nanobot
       def initialize(lld)
         @lld = lld
       end
+      attr_reader :lld
 
       def ==(other)
-        other.is_a?(SMove) && self.lld == other.lld
+        other.class == self.class && self.lld == other.lld
       end
 
       def inspect
         "SMove(#{@lld.dx} #{@lld.dy} #{@lld.dz})"
-      end
-
-      def lld
-        @lld
       end
     end
 
@@ -51,30 +48,63 @@ class Nanobot
     end
 
     class Fission < Base
+      def initialize(nd, m)
+        @nd, @m = nd, m
+      end
+      attr_reader :nd, :m
+
+      def ==(other)
+        other.class == self.class && self.nd == other.nd && self.m == other.m
+      end
+
+      def inspect
+        "Fission(#{@nd.dx} #{@nd.dy} #{@nd.dz} m=#{@m})"
+      end
     end
 
     class Fill < Base
       def initialize(nd)
         @nd = nd
       end
+      attr_reader :nd
 
       def ==(other)
-        other.is_a?(Fill) && self.nd == other.nd
+        other.class == self.class && self.nd == other.nd
       end
 
       def inspect
         "Fill(#{@nd.dx} #{@nd.dy} #{@nd.dz})"
       end
-
-      def nd
-        @nd
-      end
     end
 
     class FusionP < Base
+      def initialize(nd)
+        @nd = nd
+      end
+      attr_reader :nd
+
+      def ==(other)
+        other.class == self.class && self.nd == other.nd
+      end
+
+      def inspect
+        "FusionP(#{@nd.dx} #{@nd.dy} #{@nd.dz})"
+      end
     end
 
     class FusionS < Base
+      def initialize(nd)
+        @nd = nd
+      end
+      attr_reader :nd
+
+      def ==(other)
+        other.class == self.class && self.nd == other.nd
+      end
+
+      def inspect
+        "FusionS(#{@nd.dx} #{@nd.dy} #{@nd.dz})"
+      end
     end
   end
 end

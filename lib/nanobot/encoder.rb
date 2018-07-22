@@ -2,17 +2,18 @@
 class Nanobot
   class Encoder
     def initialize
-      @traces = []    
+      @traces = [String.new]
     end
   
-    def parse(command)
+    def parse(command = [])
+      p command
       command.each do |c|
         case c 
-        when Halt
-          @traces << "11111111"
-        when Flip
-          @traces << "11111101"
-        when SMove
+        when Command::Halt
+          @traces[0] << "11111111"
+        when Command::Flip
+          @traces[0] << "11111101"
+        when Command::SMove
           lld = c.lld
           if !lld.dx.zero?
             a = "01"
@@ -24,10 +25,10 @@ class Nanobot
             a = "11"
             i = lld.dz + 15
           end
-          @traces << "00#{a}0100" + "000#{i.to_s(2).rjust(5, "0")}"
-        when Fill
+          @traces[0] << "00#{a}0100" + "000#{i.to_s(2).rjust(5, "0")}"
+        when Command::Fill
           value = nd_val(c.nd)
-          @traces << "#{value.to_s(2).rjust(5, '0')}0011"
+          @traces[0] << "#{value.to_s(2).rjust(5, '0')}011"
         end 
       end
     end
@@ -36,6 +37,7 @@ class Nanobot
       binary = @traces.pack("B*") 
       file = open(file_path, "wb")
       file.print(binary)
+      puts "create a #{file_path}"
     end
 
     private

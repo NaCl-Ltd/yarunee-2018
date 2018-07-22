@@ -40,10 +40,13 @@ class Nanobot
     end
 
     desc "solver2", "Solver2を実行する"
+    option :file, :type => :string
     def solver2(mdl_path)
       model = Model.load(mdl_path)
-      trace = Solver2.new(model).solve
+      solver2 = Solver2.new(model)
+      trace = solver2.solve
       p trace
+      solver2.nbt_save(options[:file]) if options[:file]
     end
 
     desc "browse_model", ".mdlファイルをブラウザで開く"

@@ -29,6 +29,10 @@ class Nanobot
       return @trace
     end
 
+    def nbt_save(file_path)
+      @trace.save(file_path)
+    end
+
     private
 
     def high_harmonics_needed?

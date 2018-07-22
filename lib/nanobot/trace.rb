@@ -16,7 +16,6 @@ class Nanobot
       encoder = Encoder.new
       encoder.parse(@commands)
       encoder.create_binaryfile(nbt_path)
-      # File.write(nbt_path, TODO)
     end
   end
 end

@@ -7,6 +7,7 @@ require 'nanobot/source'
 require 'nanobot/solver1'
 require 'nanobot/solver2'
 require 'nanobot/solver3'
+require 'pathname'
 
 class Nanobot
   class Cli < Thor
@@ -58,6 +59,17 @@ class Nanobot
       solver = Solver3.new(model)
       trace = solver.solve
       trace.save(options[:file]) if options[:file]
+    end
+
+    desc "solve_problems", "問題の解凍用のmslファイルを生成"
+    def solve_problems(m)
+      m.to_i.step(186, 3) do |i|
+        mdl_path = Pathname.new("files/problemsL/LA#{i.to_s.rjust(3, '0')}_tgt.mdl")
+        model = Model.load(mdl_path.to_s)
+        solver = Solver3.new(model)
+        trace = solver.solve
+        trace.save("submission/FA#{i.to_s.rjust(3, '0')}.nbt")
+      end
     end
 
     desc "browse_model", ".mdlファイルをブラウザで開く"

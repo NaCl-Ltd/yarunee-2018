@@ -31,6 +31,10 @@ class Nanobot
       def inspect
         "SMove(#{@lld.dx} #{@lld.dy} #{@lld.dz})"
       end
+
+      def lld
+        @lld
+      end
     end
 
     class LMove < Base
@@ -46,6 +50,10 @@ class Nanobot
 
       def inspect
         "Fill(#{@nd.dx} #{@nd.dy} #{@nd.dz})"
+      end
+
+      def nd
+        @nd
       end
     end
 

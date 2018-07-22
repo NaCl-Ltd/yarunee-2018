@@ -41,7 +41,7 @@ class Nanobot
 
     describe "#parallel" do
       before do
-        model = Model.empty(100)
+        model = Model.empty(5)
         @solver = Solver.new(model)
         @solver.logger = Logger.new(nil)
       end

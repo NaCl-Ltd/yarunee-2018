@@ -20,6 +20,12 @@ class Nanobot
     def solve
       raise "override me"
     end
+
+    # 盤面を複数に分割する
+    def split_areas()
+
+      return 
+    end
     
     private
 

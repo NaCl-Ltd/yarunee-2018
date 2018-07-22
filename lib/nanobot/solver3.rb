@@ -53,8 +53,8 @@ class Nanobot
     # 生成はi-1番目のbotが担当する。生成後は自分の初期位置に移動する
     def do_fission(i)
       @logger.debug("bot#{i}を生成します")
-      parallel(i-1 => @bots[i-1].move_to(1, 0, 0) +        # 右にずれて、
-                      [Fission.new(Nd.new(-1, 0, 0),       # 原点に子供を生む
+      parallel(i-1 => @bots[i-1].move_to(0, 0, 1) +        # 上にずれて、
+                      [Fission.new(Nd.new(0, 0, -1),       # 原点に子供を生む
                                    @n_areas - i,
                                    new_bot_id: i,
                                    new_bot_pos: [0, 0, 0])])

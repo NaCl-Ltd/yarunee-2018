@@ -23,6 +23,9 @@ class Nanobot
     end
 
     class Wait < Base
+      def self.instance
+        @instance ||= new
+      end
     end
 
     class Flip < Base

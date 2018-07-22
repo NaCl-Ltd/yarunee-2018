@@ -55,7 +55,7 @@ class Nanobot
       max_cmds_len = cmds_list.values.map(&:length).max
       padded_cmds_list = @bots.keys.map{|id|
         cmds = cmds_list[id] || []
-        waits = [Wait.new] * (max_cmds_len - cmds.length)
+        waits = [Wait.instance] * (max_cmds_len - cmds.length)
         [id, waits + cmds]
       }.to_h
       sorted_cmds_list = padded_cmds_list.sort_by{|id, l| id}.map(&:last)

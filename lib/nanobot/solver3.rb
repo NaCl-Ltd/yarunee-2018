@@ -93,7 +93,11 @@ class Nanobot
     # y層の出力は、y+1層にいる状態で行う
     def print_layer(y)
       @logger.debug("y=#{y}の層を出力します")
-      cmd_all{|bot| bot.move_by(0, 1, 0)}
+      cmd_all{|bot|
+        x1, z1 = *@areas[@areas.length-bot.id][0]
+        bot.move_by(0, 1, 0) +
+        bot.move_to(x1, bot.y, z1)
+      }
       dir = +1 
       @area_z_size.times do |dz|
         print_line(dir, dz)

@@ -30,16 +30,17 @@ class Nanobot
     def split_areas()
       raise "盤面が5x5より小さいので分割できません" if @model.resolution < 5
       heights, widths = [
-        [HEIGHT, @model.resolution.divmod(HEIGHT)],
-        [WIDTH, @model.resolution.divmod(WIDTH)],
+        [HEIGHT, @model.z_size.divmod(HEIGHT)],
+        [WIDTH, @model.x_size.divmod(WIDTH)],
       ].map do |size, divmod|
         size.times.map { |i| i == size-1 ? i * divmod[0] + divmod[1] : i * divmod[0] }
       end
+      x0, z0 = @model.min_x, @model.min_z
       heights.flat_map.with_index do |height, hi|
         widths.map.with_index do |width, wi|
-          [[width, height],
-           [widths[wi+1] ? widths[wi+1]-1 : @model.resolution-1,
-            heights[hi+1] ? heights[hi+1]-1 : @model.resolution-1]]
+          [[x0+width, z0+height],
+           [x0+(widths[wi+1] ? widths[wi+1]-1 : @model.x_size-1),
+            z0+(heights[hi+1] ? heights[hi+1]-1 : @model.z_size-1)]]
         end
       end
     end

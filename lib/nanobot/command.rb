@@ -15,6 +15,9 @@ class Nanobot
     end
 
     class Wait < Base
+      def inspect
+        "Wait"
+      end
     end
 
     class Flip < Base

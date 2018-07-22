@@ -1,3 +1,4 @@
+require "nanobot/encoder"
 class Nanobot
   # 命令列を表すクラス
   class Trace
@@ -12,7 +13,10 @@ class Nanobot
 
     # .nbtファイルに命令列を書き出す
     def save(nbt_path)
-      File.write(nbt_path, TODO)
+      encoder = Encoder.new
+      encoder.parse(@commands)
+      encoder.create_binaryfile(nbt_path)
+      # File.write(nbt_path, TODO)
     end
   end
 end

@@ -32,5 +32,11 @@ class Nanobot
         end 
       end
     end
+
+    def create_binaryfile(file_path)
+      binary = @traces.pack("B*") 
+      file = open(file_path, "wb")
+      file.print(binary)
+    end
   end
 end

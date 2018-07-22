@@ -40,11 +40,6 @@ class Nanobot
 
     private
 
-    def high_harmonics_needed?
-      true
-      # TODO: 下がVoidであるmatterが存在するときだけ真を返すようにする
-    end
-
     # 分裂を行い、各botを初期位置に配置する
     def do_fissions
       for i in 2..@n_areas

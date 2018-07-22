@@ -57,7 +57,13 @@ class Nanobot
 
     # ひさし(突き出している部分)があるとき真を返す
     def has_eaves?
-      TODO
+      (1..@resolution-1).any? { |y|
+        (0..@resolution-1).any? { |x|
+          (0..@resolution-1).any? { |z|
+            self[x, y, z] ? (self[x, y-1, z] ? false : true) : false
+          }
+        }
+      }
     end
 
     private

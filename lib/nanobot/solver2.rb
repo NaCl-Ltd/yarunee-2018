@@ -35,11 +35,6 @@ class Nanobot
 
     private
 
-    def high_harmonics_needed?
-      true
-      # TODO: 下がVoidであるmatterが存在するときだけ真を返すようにする
-    end
-
     # ある層を出力する
     # y層の出力は、y+1層にいる状態で行う
     def print_layer(y)

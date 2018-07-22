@@ -46,6 +46,10 @@ class Nanobot
 
     private
 
+    def high_harmonics_needed?
+      @model.has_eaves?
+    end
+
     # 複数のbotに同時に命令を与える
     # cmds_list: {id => [cmds...]}
     # 指定がないbotや、時間が余った場合はWaitで待つ

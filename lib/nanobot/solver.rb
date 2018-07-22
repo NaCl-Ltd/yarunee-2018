@@ -58,7 +58,7 @@ class Nanobot
       padded_cmds_list = @bots.keys.map{|id|
         cmds = cmds_list[id] || []
         waits = [Wait.new] * (max_cmds_len - cmds.length)
-        [id, cmds + waits]
+        [id, waits + cmds]
       }.to_h
       sorted_cmds_list = padded_cmds_list.sort_by{|id, l| id}.map(&:last)
       @trace.add_commands(*sorted_cmds_list.transpose.flatten(1))

@@ -20,6 +20,9 @@ class Nanobot
       @x, @y, @z = 0, 0, 0
       @areas = split_areas
       @n_areas = @areas.size
+      # エリアの最大サイズ(端数により、エリアのサイズが一致しない可能性があるので注意)
+      @area_x_size = @areas.map{|(x1, z1), (x2, z2)| x2-x1+1}.max
+      @area_z_size = @areas.map{|(x1, z1), (x2, z2)| z2-z1+1}.max
     end
 
     def solve
@@ -92,32 +95,47 @@ class Nanobot
       @logger.debug("y=#{y}の層を出力します")
       cmd_all{|bot| bot.move_by(0, 1, 0)}
       dir = +1 
-      for z in @model.min_z..@model.max_z
-        print_line(y, z, dir, z==@model.max_z)
+      @area_z_size.times do |dz|
+        print_line(dir, dz)
         dir = -dir
       end
     end
 
     # 線を引くように動き、必要なmatterを配置する
     # 終わったあとは次の行にずれる
-    # y: 線を引きたい層(nanobot自身はy+1にいるので注意)
     # dir: +1または-1
-    def print_line(y, z, dir, is_last)
-      @logger.debug("print_line: z=#{z} #{dir>0 ? 'forward' : 'backward'}")
-      x_size = @model.max_x - @model.min_x + 1
-      x_size.times do |i|
+    # dz: 何番目の線か(0~)
+    def print_line(dir, dz)
+      @logger.debug("print_line: #{dz}本目 #{dir>0 ? 'forward' : 'backward'}")
+      @area_x_size.times do |dx|
         cmd_all{|bot|
           cmds = []
-          cmds << Fill.new(Nd.new(0, -1, 0)) if @model[bot.x, bot.y, bot.z] # 自分の真下を塗る
-          cmds += bot.move_by(dir, 0, 0) unless i == x_size-1
+          # 自分が担当するエリア
+          (x1, z1), (x2, z2) = *@areas[@areas.length-bot.id]
+          x_size = x2-x1+1
+
+          if dx < x_size
+            cmds << Fill.new(Nd.new(0, -1, 0)) if @model[bot.x, bot.y, bot.z] # 自分の真下を塗る
+          end
+          if dx < x_size-1
+            cmds += bot.move_by(dir, 0, 0)
+          end
+
           cmds
         }
       end
 
-      unless is_last
-        @logger.debug("次の行(z=#{z+1})に移動します")
-        cmd_all{|bot| bot.move_by(0, 0, 1)}
-      end
+      @logger.debug("次の行(#{dz+1}本目)に移動します")
+      cmd_all{|bot|
+        # 自分が担当するエリア
+        (x1, z1), (x2, z2) = *@areas[@areas.length-bot.id]
+        z_size = z2-z1+1
+        if dz < z_size-1
+          bot.move_by(0, 0, 1)
+        else
+          []
+        end
+      }
     end
   end
 end

@@ -40,16 +40,19 @@ class Nanobot
     end
 
     describe "#parallel" do
-      it "長さが一番長いものに合わせてWaitを埋める" do
+      before do
         model = Model.empty(100)
-        solver = Solver.new(model)
-        solver.logger = Logger.new(nil)
-        solver.instance_variable_set(:@bots, {3 => Bot.new(3), 5 => Bot.new(5)})
-        solver.send(:parallel, {
+        @solver = Solver.new(model)
+        @solver.logger = Logger.new(nil)
+      end
+
+      it "長さが一番長いものに合わせてWaitを埋める" do
+        @solver.instance_variable_set(:@bots, {3 => Bot.new(3), 5 => Bot.new(5)})
+        @solver.send(:parallel, {
           3 => [C::Flip.new, C::Flip.new],
           5 => [C::Halt.new],
         })
-        trace = solver.instance_variable_get(:@trace)
+        trace = @solver.instance_variable_get(:@trace)
         expect(trace.commands).to eq(
           [C::Flip.new, C::Halt.new, C::Flip.new, C::Wait.new]
         )

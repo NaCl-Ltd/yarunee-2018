@@ -54,7 +54,8 @@ class Nanobot
     def do_fission(i)
       @logger.debug("bot#{i}を生成します")
       parallel(i-1 => @bots[i-1].move_to(1, 0, 0) +        # 右にずれて、
-                      [Fission.new(Nd.new(-1, 0, 0), 0,    # 原点に子供を生む
+                      [Fission.new(Nd.new(-1, 0, 0),       # 原点に子供を生む
+                                   @n_areas - i,
                                    new_bot_id: i,
                                    new_bot_pos: [0, 0, 0])])
 

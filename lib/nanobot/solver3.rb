@@ -81,8 +81,8 @@ class Nanobot
       cmds_list = Array.new(@bots.size){ [] }
       parallel(id => @bots[id].move_to(0, @model.max_y+1, 0) +
                      @bots[master_id].move_to(1, 0, 0))   # masterの右に移動
-      parallel(master_id => FusionP.new(Nd.new(1, 0, 0)),
-               id        => FusionS.new(Nd.new(-1, 0, 0)))
+      parallel(master_id => [FusionP.new(Nd.new(1, 0, 0))],
+               id        => [FusionS.new(Nd.new(-1, 0, 0))])
     end
 
     # ある層を出力する

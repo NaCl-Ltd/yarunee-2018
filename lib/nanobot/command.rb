@@ -109,5 +109,52 @@ class Nanobot
         "#{cmd_name}(#{@nd.dx} #{@nd.dy} #{@nd.dz})"
       end
     end
+
+    class Void < Base
+      def initialize(nd)
+        @nd = nd
+      end
+      attr_reader :nd
+
+      def ==(other)
+        other.class == self.class && self.nd == other.nd
+      end
+
+      def inspect
+        "#{cmd_name}(#{@nd.dx} #{@nd.dy} #{@nd.dz})"
+      end
+    end
+
+    class GFill < Base
+      def initialize(nd, fd)
+        @nd = nd
+        @fd = fd
+      end
+      attr_reader :nd, :fd
+
+      def ==(other)
+        other.class == self.class && self.nd == other.nd && self.fd == other.fd
+      end
+
+      def inspect
+        "#{cmd_name}(nd: #{@nd.dx} #{@nd.dy} #{@nd.dz}, fd: #{@fd.dx}, #{@fd.dy}, #{@nd.dz})"
+      end
+    end
+
+    class GVoid < Base
+      def initialize(nd, fd)
+        @nd = nd
+        @fd = fd
+      end
+      attr_reader :nd, :fd
+
+      def ==(other)
+        other.class == self.class && self.nd == other.nd && self.fd == other.fd
+      end
+
+      def inspect
+        "#{cmd_name}(nd: #{@nd.dx} #{@nd.dy} #{@nd.dz}, fd: #{@fd.dx}, #{@fd.dy}, #{@nd.dz})"
+      end
+    end
   end
 end

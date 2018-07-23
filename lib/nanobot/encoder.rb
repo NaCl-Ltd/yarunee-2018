@@ -38,6 +38,17 @@ class Nanobot
           when Command::FusionS
             value = nd_val(c.nd)
             "#{value}110"
+          when Command::Void
+            value = nd_val(c.nd)
+            "#{value}010"
+          when Command::GFill
+            nd_value = nd_val(c.nd)
+            fd_value = fd_val(c.fd)
+            "#{nd_value}001" + fd_value
+          when Command::GVoid
+            nd_value = nd_val(c.nd)
+            fd_value = fd_val(c.fd)
+            "#{nd_value}000" + fd_value
           else
             raise "不明なコマンドです"
           end
@@ -55,6 +66,14 @@ class Nanobot
     def nd_val(nd)
       v = (nd.dx + 1) * 9 + (nd.dy + 1) * 3 + (nd.dz + 1)
       return v.to_s(2).rjust(5, '0')
+    end
+
+    def fd_val(fd)
+      "#{_fd_val(fd.dx)}#{_fd_val(fd.dy)}#{_fd_val(fd.dz)}"
+    end
+
+    def _fd_val(d)
+      (d + 30).to_s(2).rjust(8, '0')
     end
   end
 end

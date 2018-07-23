@@ -121,9 +121,10 @@ class Nanobot
     # 破壊処理本体
     def do_deconstruction
       # 破壊エリアの隅
-      dig_x, dig_z = @model.min_x, @model.min_z
+      dig_z = @model.min_z
       while dig_z <= @model.max_z
         z_size = [SQUARE_SIZE, @model.max_z-dig_z-1].min
+        dig_x = @model.min_x
         while dig_x <= @model.max_x
           x_size = [SQUARE_SIZE, @model.max_x-dig_x-1].min
           @logger.debug("エリア(#{dig_x}, #{dig_z})(#{x_size}x#{z_size})の上空にbotを移動します")

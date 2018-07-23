@@ -152,7 +152,7 @@ class Nanobot
 
     # 次に破壊すべき面のy座標を返す。床まで掘れている場合はnilを返す
     def next_dig_y(dig_x, y, dig_z, x_size, z_size)
-      while y > 0
+      while y >= 0
         return y if matter_in_plane?(dig_x, y, dig_z, x_size, z_size)
         y -= 1
       end

@@ -104,7 +104,7 @@ class Nanobot
       parallel(master_id => @bots[master_id].move_to(0, @model.max_y+1, 0) +
                             @bots[master_id].move_to(0, 0, 0))
 
-      (@areas.size-1).downto(1) do |id|
+      3.downto(1) do |id|
         do_fusion(id, master_id)
       end
     end

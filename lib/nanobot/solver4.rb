@@ -132,9 +132,9 @@ class Nanobot
             bot.move_to(dig_x+dx, @ceiling_y, dig_z+dz)
           }
           dig_area(dig_x, dig_z, x_size, z_size)
-          dig_x += SQUARE_SIZE+1
+          dig_x += SQUARE_SIZE
         end
-        dig_z += SQUARE_SIZE+1
+        dig_z += SQUARE_SIZE
       end
     end
 

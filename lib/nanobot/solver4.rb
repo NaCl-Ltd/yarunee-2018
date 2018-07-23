@@ -103,17 +103,20 @@ class Nanobot
       master_id = 1
 
       @logger.debug("botの回収処理を始めます。bot#{master_id}を原点に移動します")
-      parallel(master_id => @bots[master_id].move_to(0, 0, 0))
+      tmp_y = @bots[master_id].y == 0 ? 1 : 0
+      parallel(master_id => @bots[master_id].move_to(0, tmp_y, 0) +
+                            @bots[master_id].move_to(0, 0, 0))
 
       (2..4).each do |id|
-        do_fusion(id, master_id)
+        do_fusion(id, master_id, tmp_y)
       end
     end
 
-    def do_fusion(id, master_id)
+    def do_fusion(id, master_id, tmp_y)
       @logger.debug("bot#{id}を回収します。")
       cmds_list = Array.new(@bots.size){ [] }
-      parallel(id => @bots[id].move_to(1, 0, 0))   # masterの右に移動
+      parallel(id => @bots[id].move_to(1, tmp_y, 0) +
+                     @bots[id].move_to(1, 0, 0))   # masterの右に移動
       parallel(master_id => [FusionP.new(Nd.new(1, 0, 0))],
                id        => [FusionS.new(Nd.new(-1, 0, 0))])
     end

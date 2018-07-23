@@ -90,8 +90,8 @@ class Nanobot
     # i番目のbotを初期位置に移動させる
     def move_to_initial_position(i)
       @logger.debug("bot#{i}を初期位置に配置します")
-      x_size = [SQUARE_SIZE, @model.max_x-1].min
-      z_size = [SQUARE_SIZE, @model.max_z-1].min
+      x_size = [SQUARE_SIZE, @model.max_x-@model.min_x-1].min
+      z_size = [SQUARE_SIZE, @model.max_z-@model.min_z-1].min
       dx, dz = *BOT_POS[x_size, z_size][i]
       parallel(i => @bots[i].move_to(@model.min_x+dx, @ceiling_y, @model.min_z+dz))
     end

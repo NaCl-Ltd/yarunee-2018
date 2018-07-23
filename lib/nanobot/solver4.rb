@@ -122,13 +122,13 @@ class Nanobot
     def do_deconstruction
       # 破壊エリアの隅
       dig_x, dig_z = @model.min_x, @model.min_z
-      while dig_z+SQUARE_SIZE+1 <= @model.max_z
+      while dig_z <= @model.max_z
         z_size = [SQUARE_SIZE, @model.max_z-dig_z-1].min
-        while dig_x+SQUARE_SIZE+1 <= @model.max_x
+        while dig_x <= @model.max_x
           x_size = [SQUARE_SIZE, @model.max_x-dig_x-1].min
           @logger.debug("エリア(#{dig_x}, #{dig_z})(#{x_size}x#{z_size})の上空にbotを移動します")
           cmd_all{|bot|
-            dx, dz = *BOT_POS[x_size, z_size][i]
+            dx, dz = *BOT_POS[x_size, z_size][bot.id]
             bot.move_to(dig_x+dx, @ceiling_y, dig_z+dz)
           }
           dig_area(dig_x, dig_z, x_size, z_size)
@@ -146,6 +146,7 @@ class Nanobot
         dig_y = next_dig_y(dig_x, dig_y, dig_z, x_size, z_size)
         break unless dig_y
         dig_plane(dig_x, dig_y, dig_z, x_size, z_size)
+        dig_y -= 1
       end
     end
 
@@ -170,6 +171,7 @@ class Nanobot
 
     # ある平面を破壊する
     def dig_plane(dig_x, dig_y, dig_z, x_size, z_size)
+      @logger.debug("y=#{dig_y}の面を破壊します")
       place_bots_in_plane(dig_x, dig_y, dig_z)
       cmd_all{|bot|
         [GVoid.new(*GVOID_SQUARE_ARGS[x_size, z_size][bot.id])]
@@ -185,7 +187,7 @@ class Nanobot
     # botを平面に埋める
     def place_bots_in_plane(dig_x, dig_y, dig_z)
       cmd_all{|bot|
-        bot.move_by(0, dig_y - @bot.y + 1, 0)
+        bot.move_by(0, dig_y - bot.y + 1, 0)
       }
       cmd_all{|bot|
         if @model[bot.x, dig_y, bot.z]

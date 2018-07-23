@@ -104,6 +104,19 @@ class Nanobot
       end
     end
 
+    desc "fr_solve_problems", "問題の解凍用のmslファイルを生成"
+    def fd_solve_problems(m)
+      m.to_i.step(115, 3) do |i|
+        src_path = Pathname.new("files/problemsF/FR#{i.to_s.rjust(3, '0')}_src.mdl")
+        tgt_path = Pathname.new("files/problemsF/FR#{i.to_s.rjust(3, '0')}_tgt.mdl")
+        src_model = Model.load(src_path.to_s)
+        tgt_model = Model.load(tgt_path.to_s)
+        solver = Solver5.new(src_model, tgt_model)
+        trace = solver.solve
+        trace.save("submission/FR#{i.to_s.rjust(3, '0')}.nbt")
+      end
+    end
+
     desc "browse_model", ".mdlファイルをブラウザで開く"
     def browse_model(mdl_path)
       Browser.new.open_model(mdl_path)

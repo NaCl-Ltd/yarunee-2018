@@ -7,6 +7,7 @@ require 'nanobot/source'
 require 'nanobot/solver1'
 require 'nanobot/solver2'
 require 'nanobot/solver3'
+require 'nanobot/solver4'
 require 'pathname'
 
 class Nanobot
@@ -57,6 +58,15 @@ class Nanobot
     def solver3(mdl_path)
       model = Model.load(mdl_path)
       solver = Solver3.new(model)
+      trace = solver.solve
+      trace.save(options[:file]) if options[:file]
+    end
+
+    desc "solver4", "Solver4を実行する"
+    option :file, :type => :string
+    def solver4(mdl_path)
+      model = Model.load(mdl_path)
+      solver = Solver4.new(model)
       trace = solver.solve
       trace.save(options[:file]) if options[:file]
     end

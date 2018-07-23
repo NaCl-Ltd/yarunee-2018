@@ -105,7 +105,7 @@ class Nanobot
     end
 
     desc "fr_solve_problems", "問題の解凍用のmslファイルを生成"
-    def fd_solve_problems(m)
+    def fr_solve_problems(m)
       m.to_i.step(115, 3) do |i|
         src_path = Pathname.new("files/problemsF/FR#{i.to_s.rjust(3, '0')}_src.mdl")
         tgt_path = Pathname.new("files/problemsF/FR#{i.to_s.rjust(3, '0')}_tgt.mdl")

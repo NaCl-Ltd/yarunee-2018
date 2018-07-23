@@ -8,33 +8,35 @@ class Nanobot
     # 破壊する正方形のサイズ
     SQUARE_SIZE = 15
     # ボットの陣形
-    BOT_POS = {
-      1 => [0, 0],
-      2 => [SQUARE_SIZE+1, 0],
-      3 => [0, SQUARE_SIZE+1],
-      4 => [SQUARE_SIZE+1, SQUARE_SIZE+1],
-    }
+    #   3  1
+    #   4  2
+    BOT_POS = proc{|x_size, z_size| {
+      4 => [0, 0],
+      2 => [x_size+1, 0],
+      3 => [0, z_size+1],
+      1 => [x_size+1, z_size+1],
+    }}
     # GVoidするときの始点の相対座標
-    GVOID_SQUARE_ARGS = {
-      1 => [Nd.new( 1, 0,  1), Fd.new( SQUARE_SIZE, 0,  SQUARE_SIZE)],
-      2 => [Nd.new(-1, 0,  1), Fd.new(-SQUARE_SIZE, 0,  SQUARE_SIZE)],
-      3 => [Nd.new( 1, 0, -1), Fd.new( SQUARE_SIZE, 0, -SQUARE_SIZE)],
-      4 => [Nd.new(-1, 0, -1), Fd.new(-SQUARE_SIZE, 0, -SQUARE_SIZE)],
-    }
+    GVOID_SQUARE_ARGS = proc{|x_size, z_size| {
+      4 => [Nd.new( 1, 0,  1), Fd.new( x_size, 0,  z_size)],
+      2 => [Nd.new(-1, 0,  1), Fd.new(-x_size, 0,  z_size)],
+      3 => [Nd.new( 1, 0, -1), Fd.new( x_size, 0, -z_size)],
+      1 => [Nd.new(-1, 0, -1), Fd.new(-x_size, 0, -z_size)],
+    }}
     # 横線を消すときの引数
-    GVOID_ROWS_ARGS = {
-      1 => [Nd.new( 1, 0,  0), Fd.new( SQUARE_SIZE, 0,  0)],
-      2 => [Nd.new(-1, 0,  0), Fd.new(-SQUARE_SIZE, 0,  0)],
-      3 => [Nd.new( 1, 0,  0), Fd.new( SQUARE_SIZE, 0,  0)],
-      4 => [Nd.new(-1, 0,  0), Fd.new(-SQUARE_SIZE, 0,  0)],
-    }
+    GVOID_ROWS_ARGS = proc{|x_size, z_size| {
+      4 => [Nd.new( 1, 0,  0), Fd.new( x_size, 0,  0)],
+      2 => [Nd.new(-1, 0,  0), Fd.new(-x_size, 0,  0)],
+      3 => [Nd.new( 1, 0,  0), Fd.new( x_size, 0,  0)],
+      1 => [Nd.new(-1, 0,  0), Fd.new(-x_size, 0,  0)],
+    }}
     # 縦線を消すときの引数
-    GVOID_COLS_ARGS = {
-      1 => [Nd.new( 0, 0,  1), Fd.new(0, 0,  SQUARE_SIZE)],
-      3 => [Nd.new( 0, 0, -1), Fd.new(0, 0, -SQUARE_SIZE)],
-      2 => [Nd.new( 0, 0,  1), Fd.new(0, 0,  SQUARE_SIZE)],
-      4 => [Nd.new( 0, 0, -1), Fd.new(0, 0, -SQUARE_SIZE)],
-    }
+    GVOID_COLS_ARGS = proc{|x_size, z_size| {
+      4 => [Nd.new( 0, 0,  1), Fd.new(0, 0,  z_size)],
+      3 => [Nd.new( 0, 0, -1), Fd.new(0, 0, -z_size)],
+      2 => [Nd.new( 0, 0,  1), Fd.new(0, 0,  z_size)],
+      1 => [Nd.new( 0, 0, -1), Fd.new(0, 0, -z_size)],
+    }}
 
     def initialize(*args)
       super
@@ -88,11 +90,13 @@ class Nanobot
     # i番目のbotを初期位置に移動させる
     def move_to_initial_position(i)
       @logger.debug("bot#{i}を初期位置に配置します")
-      dx, dz = *BOT_POS[i]
+      x_size = [SQUARE_SIZE, @model.max_x-1].min
+      z_size = [SQUARE_SIZE, @model.max_z-1].min
+      dx, dz = *BOT_POS[x_size, z_size][i]
       parallel(i => @bots[i].move_to(@model.min_x+dx, @ceiling_y, @model.min_z+dz))
     end
 
-    # 天井にいるbotたちを原点にまとめる
+    # 作業終了したbotたちを原点にまとめる
     def do_fusions
       master_id = @bots.keys.max
 
@@ -119,8 +123,15 @@ class Nanobot
       # 破壊エリアの隅
       dig_x, dig_z = @model.min_x, @model.min_z
       while dig_z+SQUARE_SIZE+1 <= @model.max_z
+        z_size = [SQUARE_SIZE, @model.max_z-dig_z-1].min
         while dig_x+SQUARE_SIZE+1 <= @model.max_x
-          dig_area(dig_x, dig_z)
+          x_size = [SQUARE_SIZE, @model.max_x-dig_x-1].min
+          @logger.debug("エリア(#{dig_x}, #{dig_z})(#{x_size}x#{z_size})の上空にbotを移動します")
+          cmd_all{|bot|
+            dx, dz = *BOT_POS[x_size, z_size][i]
+            bot.move_to(dig_x+dx, @ceiling_y, dig_z+dz)
+          }
+          dig_area(dig_x, dig_z, x_size, z_size)
           dig_x += SQUARE_SIZE+1
         end
         dig_z += SQUARE_SIZE+1
@@ -128,30 +139,29 @@ class Nanobot
     end
 
     # あるエリアを破壊する
-    def dig_area(dig_x, dig_z)
-      TODO: botを初期位置に移動する処理
-      @logger.debug("エリア(#{dig_x}, #{dig_z})の破壊を開始します")
+    def dig_area(dig_x, dig_z, x_size, z_size)
+      @logger.debug("エリア(#{dig_x}, #{dig_z})(#{x_size}x#{z_size})の破壊を開始します")
       dig_y = @model.max_y
       loop do
-        dig_y = next_dig_y(dig_x, dig_y, dig_z)
+        dig_y = next_dig_y(dig_x, dig_y, dig_z, x_size, z_size)
         break unless dig_y
-        dig_plane(dig_x, dig_y, dig_z)
+        dig_plane(dig_x, dig_y, dig_z, x_size, z_size)
       end
     end
 
     # 次に破壊すべき面のy座標を返す。床まで掘れている場合はnilを返す
-    def next_dig_y(dig_x, y, dig_z)
+    def next_dig_y(dig_x, y, dig_z, x_size, z_size)
       while y > 0
-        return y if matter_in_plane?(dig_x, y, dig_z)
+        return y if matter_in_plane?(dig_x, y, dig_z, x_size, z_size)
         y -= 1
       end
       return nil
     end
 
     # 平面内にmatterがあるとき真を返す
-    def matter_in_plane?(dig_x, dig_y, dig_z)
-      for x in dig_x..(dig_x+SQUARE_SIZE+1)
-        for z in dig_z..(dig_z+SQUARE_SIZE+1)
+    def matter_in_plane?(dig_x, dig_y, dig_z, x_size, z_size)
+      for x in dig_x..(dig_x+x_size+1)
+        for z in dig_z..(dig_z+z_size+1)
           return true if @model[x, dig_y, z]
         end
       end
@@ -159,16 +169,16 @@ class Nanobot
     end
 
     # ある平面を破壊する
-    def dig_plane(dig_x, dig_y, dig_z)
+    def dig_plane(dig_x, dig_y, dig_z, x_size, z_size)
       place_bots_in_plane(dig_x, dig_y, dig_z)
       cmd_all{|bot|
-        [GVoid.new(*GVOID_SQUARE_ARGS[bot.id])]
+        [GVoid.new(*GVOID_SQUARE_ARGS[x_size, z_size][bot.id])]
       }
       cmd_all{|bot|
-        [GVoid.new(*GVOID_ROWS_ARGS[bot.id])]
+        [GVoid.new(*GVOID_ROWS_ARGS[x_size, z_size][bot.id])]
       }
       cmd_all{|bot|
-        [GVoid.new(*GVOID_COLS_ARGS[bot.id])]
+        [GVoid.new(*GVOID_COLS_ARGS[x_size, z_size][bot.id])]
       }
     end
 
@@ -186,85 +196,6 @@ class Nanobot
       }
       cmd_all{|bot|
         bot.move_by(0, -1, 0)
-      }
-    end
-
-    # ----
-
-    # ある層を出力する
-    # y層の出力は、y+1層にいる状態で行う
-    def print_layer(y)
-      if @model.max_y > 100 && y % (@model.max_y/10) == 0
-        @logger.info("y=#{y}の層を出力します(max_y: #{@model.max_y})")
-      end
-      @logger.debug("y=#{y}の層を出力します")
-      cmd_all{|bot|
-        x1, z1 = *@areas[@areas.length-bot.id][0]
-        bot.move_by(0, 1, 0) +
-        bot.move_to(x1, bot.y, z1)
-      }
-      finished_bot_ids = @bots.select{|id, bot| layer_empty?(bot, y)}.keys.to_set
-      dir = +1
-      @area_z_size.times do |dz|
-        print_line(dir, dz, finished_bot_ids)
-        dir = -dir
-      end
-    end
-
-    # あるボットの担当範囲のy層部分が空のとき真を返す
-    def layer_empty?(bot, y)
-      (x1, z1), (x2, z2) = *@areas[@areas.length-bot.id]
-      for x in x1..x2
-        for z in z1..z2
-          return false if @model[x, y, z]
-        end
-      end
-      return true
-    end
-
-    # 線を引くように動き、必要なmatterを配置する
-    # 終わったあとは次の行にずれる
-    # dir: +1または-1
-    # dz: 何番目の線か(0~)
-    # finished_bot_ids: 層が空だったので作業が必要ないbotたち
-    def print_line(dir, dz, finished_bot_ids)
-      @logger.debug("print_line: #{dz}本目 #{dir>0 ? 'forward' : 'backward'}")
-      @area_x_size.times do |dx|
-        cmd_all{|bot|
-          if finished_bot_ids.include?(bot.id)
-            []
-          else
-            cmds = []
-            # 自分が担当するエリア
-            (x1, z1), (x2, z2) = *@areas[@areas.length-bot.id]
-            x_size = x2-x1+1
-
-            if dx < x_size
-              cmds << Fill.new(Nd.new(0, -1, 0)) if @model[bot.x, bot.y-1, bot.z] # 自分の真下を塗る
-            end
-            if dx < x_size-1
-              cmds += bot.move_by(dir, 0, 0)
-            end
-
-            cmds
-          end
-        }
-      end
-
-      @logger.debug("次の行(#{dz+1}本目)に移動します")
-      cmd_all{|bot|
-        if finished_bot_ids.include?(bot.id)
-          []
-        else
-          # 自分が担当するエリア
-          (x1, z1), (x2, z2) = *@areas[@areas.length-bot.id]
-          z_size = z2-z1+1
-          if dz < z_size-1
-            bot.move_by(0, 0, 1)
-          else
-            []
-          end
-        end
       }
     end
   end

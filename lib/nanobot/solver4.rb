@@ -171,7 +171,7 @@ class Nanobot
 
     # ある平面を破壊する
     def dig_plane(dig_x, dig_y, dig_z, x_size, z_size)
-      @logger.debug("y=#{dig_y}の面を破壊します")
+      #@logger.debug("y=#{dig_y}の面を破壊します")
       place_bots_in_plane(dig_x, dig_y, dig_z)
       if x_size>0 && z_size>0
         cmd_all{|bot|

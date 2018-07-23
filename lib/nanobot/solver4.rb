@@ -7,6 +7,34 @@ class Nanobot
     N_INITIAL_SEEDS = 40
     # 破壊する正方形のサイズ
     SQUARE_SIZE = 15
+    # ボットの陣形
+    BOT_POS = {
+      1 => [0, 0],
+      2 => [SQUARE_SIZE+1, 0],
+      3 => [0, SQUARE_SIZE+1],
+      4 => [SQUARE_SIZE+1, SQUARE_SIZE+1],
+    }
+    # GVoidするときの始点の相対座標
+    GVOID_SQUARE_ARGS = {
+      1 => [Nd.new( 1, 0,  1), Fd.new( SQUARE_SIZE, 0,  SQUARE_SIZE)],
+      2 => [Nd.new(-1, 0,  1), Fd.new(-SQUARE_SIZE, 0,  SQUARE_SIZE)],
+      3 => [Nd.new( 1, 0, -1), Fd.new( SQUARE_SIZE, 0, -SQUARE_SIZE)],
+      4 => [Nd.new(-1, 0, -1), Fd.new(-SQUARE_SIZE, 0, -SQUARE_SIZE)],
+    }
+    # 横線を消すときの引数
+    GVOID_ROWS_ARGS = {
+      1 => [Nd.new( 1, 0,  0), Fd.new( SQUARE_SIZE, 0,  0)],
+      2 => [Nd.new(-1, 0,  0), Fd.new(-SQUARE_SIZE, 0,  0)],
+      3 => [Nd.new( 1, 0,  0), Fd.new( SQUARE_SIZE, 0,  0)],
+      4 => [Nd.new(-1, 0,  0), Fd.new(-SQUARE_SIZE, 0,  0)],
+    }
+    # 縦線を消すときの引数
+    GVOID_COLS_ARGS = {
+      1 => [Nd.new( 0, 0,  1), Fd.new(0, 0,  SQUARE_SIZE)],
+      3 => [Nd.new( 0, 0, -1), Fd.new(0, 0, -SQUARE_SIZE)],
+      2 => [Nd.new( 0, 0,  1), Fd.new(0, 0,  SQUARE_SIZE)],
+      4 => [Nd.new( 0, 0, -1), Fd.new(0, 0, -SQUARE_SIZE)],
+    }
 
     def initialize(*args)
       super
@@ -52,7 +80,7 @@ class Nanobot
       @logger.debug("bot#{i}を生成します")
       parallel(i-1 => @bots[i-1].move_to(0, 0, 1) +        # 上にずれて、
                       [Fission.new(Nd.new(0, 0, -1),       # 原点に子供を生む
-                                   N_INITIAL_SEEDS - i,
+                                   N_INITIAL_SEEDS - i - 1,
                                    new_bot_id: i,
                                    new_bot_pos: [0, 0, 0])])
     end
@@ -60,13 +88,8 @@ class Nanobot
     # i番目のbotを初期位置に移動させる
     def move_to_initial_position(i)
       @logger.debug("bot#{i}を初期位置に配置します")
-      x0, z0 =
-         case i
-         when 1 then [@model.min_x, @model.min_z]
-         when 2 then [@model.min_x + SQUARE_SIZE, @model.min_z]
-         when 3 then [@model.min_x, @model.min_z + SQUARE_SIZE]
-         when 4 then [@model.min_x + SQUARE_SIZE, @model.min_z + SQUARE_SIZE]
-      parallel(i => @bots[i].move_to(x0, @ceiling_y, z0))
+      dx, dz = *BOT_POS[i]
+      parallel(i => @bots[i].move_to(@model.min_x+dx, @ceiling_y, @model.min_z+dz))
     end
 
     # 天井にいるbotたちを原点にまとめる
@@ -90,6 +113,83 @@ class Nanobot
       parallel(master_id => [FusionP.new(Nd.new(1, 0, 0))],
                id        => [FusionS.new(Nd.new(-1, 0, 0))])
     end
+
+    # 破壊処理本体
+    def do_deconstruction
+      # 破壊エリアの隅
+      dig_x, dig_z = @model.min_x, @model.min_z
+      while dig_z+SQUARE_SIZE+1 <= @model.max_z
+        while dig_x+SQUARE_SIZE+1 <= @model.max_x
+          dig_area(dig_x, dig_z)
+          dig_x += SQUARE_SIZE+1
+        end
+        dig_z += SQUARE_SIZE+1
+      end
+    end
+
+    # あるエリアを破壊する
+    def dig_area(dig_x, dig_z)
+      TODO: botを初期位置に移動する処理
+      @logger.debug("エリア(#{dig_x}, #{dig_z})の破壊を開始します")
+      dig_y = @model.max_y
+      loop do
+        dig_y = next_dig_y(dig_x, dig_y, dig_z)
+        break unless dig_y
+        dig_plane(dig_x, dig_y, dig_z)
+      end
+    end
+
+    # 次に破壊すべき面のy座標を返す。床まで掘れている場合はnilを返す
+    def next_dig_y(dig_x, y, dig_z)
+      while y > 0
+        return y if matter_in_plane?(dig_x, y, dig_z)
+        y -= 1
+      end
+      return nil
+    end
+
+    # 平面内にmatterがあるとき真を返す
+    def matter_in_plane?(dig_x, dig_y, dig_z)
+      for x in dig_x..(dig_x+SQUARE_SIZE+1)
+        for z in dig_z..(dig_z+SQUARE_SIZE+1)
+          return true if @model[x, dig_y, z]
+        end
+      end
+      return false
+    end
+
+    # ある平面を破壊する
+    def dig_plane(dig_x, dig_y, dig_z)
+      place_bots_in_plane(dig_x, dig_y, dig_z)
+      cmd_all{|bot|
+        [GVoid.new(*GVOID_SQUARE_ARGS[bot.id])]
+      }
+      cmd_all{|bot|
+        [GVoid.new(*GVOID_ROWS_ARGS[bot.id])]
+      }
+      cmd_all{|bot|
+        [GVoid.new(*GVOID_COLS_ARGS[bot.id])]
+      }
+    end
+
+    # botを平面に埋める
+    def place_bots_in_plane(dig_x, dig_y, dig_z)
+      cmd_all{|bot|
+        bot.move_by(0, dig_y - @bot.y + 1, 0)
+      }
+      cmd_all{|bot|
+        if @model[bot.x, dig_y, bot.z]
+          [Void.new(Nd.new(0, -1, 0))]
+        else
+          []
+        end
+      }
+      cmd_all{|bot|
+        bot.move_by(0, -1, 0)
+      }
+    end
+
+    # ----
 
     # ある層を出力する
     # y層の出力は、y+1層にいる状態で行う

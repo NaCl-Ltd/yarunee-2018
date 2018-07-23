@@ -1,5 +1,6 @@
 require 'nanobot/lld'
 require 'nanobot/nd'
+require 'nanobot/fd'
 
 class Nanobot
   # ナノボットへの命令を表すクラス

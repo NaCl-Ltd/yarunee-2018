@@ -9,7 +9,7 @@ class Nanobot
   class Solver
     include Command  # いちいちCommand::って書くのが面倒なので
 
-    HEIGHT = 4
+    HEIGHT = 8
     WIDTH = 5
 
     def initialize(model)

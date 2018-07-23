@@ -89,9 +89,16 @@ class Nanobot
       $stdin.gets
     end
 
+    desc "lgtn_browse_trace", ".mdlと.nbtファイルのトレースをブラウザで開く"
+    def lgtn_browse_trace(mdl_path, nbt_path, frame = '10')
+      Browser.new.lgtn_exec_trace(mdl_path, nbt_path, frame)
+      print "Press enter to finish"
+      $stdin.gets
+    end
+
     desc "browse_trace", ".mdlと.nbtファイルのトレースをブラウザで開く"
-    def browse_trace(mdl_path, nbt_path, frame = '10')
-      Browser.new.exec_trace(mdl_path, nbt_path, frame)
+    def browse_trace(nbt_path, src_path = nil, tgt_path = nil, frame = '10')
+      Browser.new.exec_trace(src_path, tgt_path, nbt_path, frame)
       print "Press enter to finish"
       $stdin.gets
     end

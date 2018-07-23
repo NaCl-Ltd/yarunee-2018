@@ -173,15 +173,21 @@ class Nanobot
     def dig_plane(dig_x, dig_y, dig_z, x_size, z_size)
       @logger.debug("y=#{dig_y}の面を破壊します")
       place_bots_in_plane(dig_x, dig_y, dig_z)
-      cmd_all{|bot|
-        [GVoid.new(*GVOID_SQUARE_ARGS[x_size, z_size][bot.id])]
-      }
-      cmd_all{|bot|
-        [GVoid.new(*GVOID_ROWS_ARGS[x_size, z_size][bot.id])]
-      }
-      cmd_all{|bot|
-        [GVoid.new(*GVOID_COLS_ARGS[x_size, z_size][bot.id])]
-      }
+      if x_size>0 && z_size>0
+        cmd_all{|bot|
+          [GVoid.new(*GVOID_SQUARE_ARGS[x_size, z_size][bot.id])]
+        }
+      end
+      if x_size>0
+        cmd_all{|bot|
+          [GVoid.new(*GVOID_ROWS_ARGS[x_size, z_size][bot.id])]
+        }
+      end
+      if z_size>0
+        cmd_all{|bot|
+          [GVoid.new(*GVOID_COLS_ARGS[x_size, z_size][bot.id])]
+        }
+      end
     end
 
     # botを平面に埋める

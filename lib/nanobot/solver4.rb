@@ -6,7 +6,7 @@ class Nanobot
     # 最初のbotがseedを何番まで持っているか
     N_INITIAL_SEEDS = 40
     # 破壊する正方形のサイズ
-    SQUARE_SIZE = 15
+    SQUARE_SIZE = 16
     # ボットの陣形
     #   3  1
     #   4  2
@@ -18,24 +18,24 @@ class Nanobot
     }}
     # GVoidするときの始点の相対座標
     GVOID_SQUARE_ARGS = proc{|x_size, z_size| {
-      4 => [Nd.new( 1, 0,  1), Fd.new( x_size, 0,  z_size)],
-      2 => [Nd.new(-1, 0,  1), Fd.new(-x_size, 0,  z_size)],
-      3 => [Nd.new( 1, 0, -1), Fd.new( x_size, 0, -z_size)],
-      1 => [Nd.new(-1, 0, -1), Fd.new(-x_size, 0, -z_size)],
+      4 => [Nd.new( 1, 0,  1), Fd.new(  x_size-1 , 0,   z_size-1)],
+      2 => [Nd.new(-1, 0,  1), Fd.new(-(x_size-1), 0,   z_size-1)],
+      3 => [Nd.new( 1, 0, -1), Fd.new(  x_size-1 , 0, -(z_size-1))],
+      1 => [Nd.new(-1, 0, -1), Fd.new(-(x_size-1), 0, -(z_size-1))],
     }}
     # 横線を消すときの引数
     GVOID_ROWS_ARGS = proc{|x_size, z_size| {
-      4 => [Nd.new( 1, 0,  0), Fd.new( x_size, 0,  0)],
-      2 => [Nd.new(-1, 0,  0), Fd.new(-x_size, 0,  0)],
-      3 => [Nd.new( 1, 0,  0), Fd.new( x_size, 0,  0)],
-      1 => [Nd.new(-1, 0,  0), Fd.new(-x_size, 0,  0)],
+      4 => [Nd.new( 1, 0,  0), Fd.new( (x_size-1), 0,  0)],
+      2 => [Nd.new(-1, 0,  0), Fd.new(-(x_size-1), 0,  0)],
+      3 => [Nd.new( 1, 0,  0), Fd.new( (x_size-1), 0,  0)],
+      1 => [Nd.new(-1, 0,  0), Fd.new(-(x_size-1), 0,  0)],
     }}
     # 縦線を消すときの引数
     GVOID_COLS_ARGS = proc{|x_size, z_size| {
-      4 => [Nd.new( 0, 0,  1), Fd.new(0, 0,  z_size)],
-      3 => [Nd.new( 0, 0, -1), Fd.new(0, 0, -z_size)],
-      2 => [Nd.new( 0, 0,  1), Fd.new(0, 0,  z_size)],
-      1 => [Nd.new( 0, 0, -1), Fd.new(0, 0, -z_size)],
+      4 => [Nd.new( 0, 0,  1), Fd.new(0, 0,  (z_size-1))],
+      3 => [Nd.new( 0, 0, -1), Fd.new(0, 0, -(z_size-1))],
+      2 => [Nd.new( 0, 0,  1), Fd.new(0, 0,  (z_size-1))],
+      1 => [Nd.new( 0, 0, -1), Fd.new(0, 0, -(z_size-1))],
     }}
 
     def initialize(*args)
@@ -82,7 +82,7 @@ class Nanobot
       @logger.debug("bot#{i}を生成します")
       parallel(i-1 => @bots[i-1].move_to(0, 0, 1) +        # 上にずれて、
                       [Fission.new(Nd.new(0, 0, -1),       # 原点に子供を生む
-                                   N_INITIAL_SEEDS - i - 1,
+                                   N_INITIAL_SEEDS - i,
                                    new_bot_id: i,
                                    new_bot_pos: [0, 0, 0])])
     end

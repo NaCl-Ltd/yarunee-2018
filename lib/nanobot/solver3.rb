@@ -26,8 +26,10 @@ class Nanobot
       @area_z_size = @areas.map{|(x1, z1), (x2, z2)| z2-z1+1}.max
     end
 
-    def solve
-      cmd(Flip.new) if high_harmonics_needed?
+    def solve(recon_mode: false)
+      unless recon_mode
+        cmd(Flip.new) if high_harmonics_needed?
+      end
       do_fissions
       for y in 0..@model.max_y
         print_layer(y)

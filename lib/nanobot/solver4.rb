@@ -54,14 +54,16 @@ class Nanobot
       @ceiling_y = @model.max_y + 1
     end
 
-    def solve
+    def solve(recon_mode: false)
       cmd(Flip.new) if high_harmonics_needed?
       do_fissions
       do_deconstruction
       do_fusions
       @logger.debug("破壊作業が完了しました")
-      cmd(Flip.new) if high_harmonics_needed?
-      cmd(Halt.new)
+      unless recon_mode
+        cmd(Flip.new) if high_harmonics_needed?
+        cmd(Halt.new)
+      end
       return @trace
     end
 
@@ -98,13 +100,12 @@ class Nanobot
 
     # 作業終了したbotたちを原点にまとめる
     def do_fusions
-      master_id = @bots.keys.max
+      master_id = 1
 
       @logger.debug("botの回収処理を始めます。bot#{master_id}を原点に移動します")
-      parallel(master_id => @bots[master_id].move_to(0, @model.max_y+1, 0) +
-                            @bots[master_id].move_to(0, 0, 0))
+      parallel(master_id => @bots[master_id].move_to(0, 0, 0))
 
-      3.downto(1) do |id|
+      (2..4).each do |id|
         do_fusion(id, master_id)
       end
     end
@@ -112,8 +113,7 @@ class Nanobot
     def do_fusion(id, master_id)
       @logger.debug("bot#{id}を回収します。")
       cmds_list = Array.new(@bots.size){ [] }
-      parallel(id => @bots[id].move_to(1, @model.max_y+1, 0) +
-                     @bots[id].move_to(1, 0, 0))   # masterの右に移動
+      parallel(id => @bots[id].move_to(1, 0, 0))   # masterの右に移動
       parallel(master_id => [FusionP.new(Nd.new(1, 0, 0))],
                id        => [FusionS.new(Nd.new(-1, 0, 0))])
     end
